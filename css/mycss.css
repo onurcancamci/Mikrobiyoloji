@@ -87,6 +87,7 @@ body {
   top: 100vh;
   height: 100%;
   transition: all 0.2s linear;
+  -webkit-transition: all 0.2s linear;
   margin: 0;
   overflow: hidden;
   
