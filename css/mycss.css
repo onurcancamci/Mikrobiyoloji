@@ -108,6 +108,7 @@ body {
   left: -101vw;
   height: 100vh;
   transition: all 0.2s linear;
+  -webkit-transition: all 0.2s linear;
   margin: 0;
   overflow: hidden;
 }
