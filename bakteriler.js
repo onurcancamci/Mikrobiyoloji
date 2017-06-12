@@ -49,7 +49,7 @@ Bakteriler.push({
   Solunum : "Aerob_Ve_Fakultatif_Anaerob",
   Aciklama : ["Sogukta Urer (+4°C)","22°C de Hareketli", "Kan Bankalarinda Depolanan Kanda Cogalabilir",
                 "Tedavide Antibiyoterapi onerilmez, Gerekmesi yada Septisemi Disinda"],
-  Enzimler : ["Ureaz","test"],
+  Enzimler : ["Ureaz"],
   Antijenler : ["O", "H", "WH"],
   Hastaliklar : [{
     Name : "Gastroenterit",
