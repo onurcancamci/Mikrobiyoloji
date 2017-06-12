@@ -149,6 +149,24 @@ for(let B of Bakteriler) {
   AddBacteriaToDisplay(B);
 }
 IndexResolver(TheIndex);
+
+for(let B of Bakteriler) {
+  let content = document.createElement("div");
+  content.className = "bakteri-content";
+  for(field in B) {
+    if(field == "HTML" || field[0] == "_") {
+      continue;
+    }
+    let fieldInfoCard = GetInfoCard();
+    let socket = GetInfoField(field + ": ");
+    UnWrapField(B[field], socket);
+    fieldInfoCard.appendChild(socket);
+    content.appendChild(fieldInfoCard);
+  }
+  document.querySelector("#invisiblePanel").appendChild(content);
+  B._content = content;
+}
+
 console.log(TheIndex);
 
 

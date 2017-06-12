@@ -34,20 +34,10 @@ let ToggleBacteria = function(id,btn) {
     if(!leftPanelActive) {
       leftPanelId = id;
       leftPanelBtn = btn;
-      let content = document.createElement("div");
-      content.className = "bakteri-content";
+      
       let B = Bakteriler.find(x => x.FamilyName == id.split("-")[0] && x.DiffName == id.split("-")[1]);
       
-      for(field in B) {
-        if(field == "HTML") {
-          continue;
-        }
-        let fieldInfoCard = GetInfoCard();
-        let socket = GetInfoField(field + ": ");
-        UnWrapField(B[field], socket);
-        fieldInfoCard.appendChild(socket);
-        content.appendChild(fieldInfoCard);
-      }
+      let content = B._content;
       
       
       

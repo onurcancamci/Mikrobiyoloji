@@ -63,4 +63,5 @@ Bakteriler.push({
   }, "Kanli Agar"],
   Duyarlilik : ["Tetrasiklin", "3.Kusak Sefalosporin", "Gentamisin", "TMP-SMX", "Kloramfenikol"],
   Bulasma : ["Su", "Oral", "Hasta", "Kontamine Besin"],
+  
 });
