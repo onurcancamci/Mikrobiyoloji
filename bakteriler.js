@@ -24,7 +24,7 @@ Bakteriler.push({
     Belirtiler : ["Ates", "Bulanti", "Kusma", "Bilinc Kaybi"],
     Aciklama : ["Olumcul"]
   }],
-  Antijenler : ["VW", "F1","Test"],
+  Antijenler : ["VW", "F1"],
   Bulasma : ["Pire Isirmasi", "Solunum Yolu"],
   Solunum : "Fakultatif_Anaerob",
   KulturOrtami : {
