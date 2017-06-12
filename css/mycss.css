@@ -132,9 +132,8 @@ body {
 #invisiblePanel {
   position: fixed;
   left: -150vw;
-  /*display: none;*/
+  display: none;
 }
-
 
 
 
