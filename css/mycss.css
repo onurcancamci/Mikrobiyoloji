@@ -1,0 +1,140 @@
+
+
+div {
+  font-size: 30pt;
+}
+
+/*body {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin: 0px !important;
+}
+*/
+body {
+  background-color: #fafafa;
+  margin: 0px;
+  overflow: hidden;
+}
+
+
+.card-panel.aile-panel {
+  padding: 20px;
+  margin-top: 0px;
+}
+.aile-isim {
+  margin-bottom: 32px;
+}
+.card-panel.aile-row {
+  
+}
+.card-panel.aile-bakteri {
+  /*transition: all 0.2s linear;*/
+}
+/*.card-panel.aile-bakteri.active {
+  position: absolute;
+  transition: all 0.2s linear;
+  top: 0px !important;
+  left: 0px !important;
+  width: 100vw !important;
+  height: auto !important;
+  
+  
+}*/
+.card-panel.aile-bakteri-text {
+  
+}
+
+.bakteri-content {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 90vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+.card-panel.textCard {
+  display: inline-block;
+  margin-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;  
+}
+
+
+.card-panel.filter-category {
+  width: 55vw;
+  margin-top: 100px;
+  margin-left: 20px;
+}
+#filterCategoryContainer {
+  width: 95vw;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  display: -webkit-inline-box;
+}
+.filterElemanContainer {
+  height: 80vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+#bottomPanel {
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  left: 0;
+  top: 100vh;
+  height: 100%;
+  transition: all 0.2s linear;
+  margin: 0;
+  overflow: hidden;
+  
+  
+}
+#bakteriPaneli {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+#leftPanel {
+  position: fixed;
+  z-index: 20;
+  width: 100vw;
+  padding: 24px;
+  top: 0;
+  left: -101vw;
+  height: 100vh;
+  transition: all 0.2s linear;
+  margin: 0;
+  overflow: hidden;
+}
+
+#leftPanelBack {
+  position: absolute;
+  left: 92vw;
+  top: 1.5vh;
+}
+#bottomPanelButton {
+  position: fixed;
+  z-index: 11;
+  font-size: 30pt;
+  padding-top: 1vh;
+  height: 4vh;
+  width: 25vw;
+  top: 95vh;
+  left: 37.5vw;
+}
+
+#invisiblePanel {
+  position: fixed;
+  left: -150vw;
+  /*display: none;*/
+}
+
+
+
+
+
+

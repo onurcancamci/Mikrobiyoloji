@@ -1,0 +1,40 @@
+CACHE MANIFEST
+# This is a comment.
+# Cache manifest version 0.0.1
+# If you change the version number in this comment,
+# the cache manifest is no longer byte-for-byte
+# identical.
+ 
+ bakteriler.js
+ index.html
+ indexer.js
+ main.js
+ materialize.js
+ fonts/roboto/Roboto-Bold.woff
+ fonts/roboto/Roboto-Bold.woff2
+ fonts/roboto/Roboto-Light.woff
+ fonts/roboto/Roboto-Light.woff2
+ fonts/roboto/Roboto-Medium.woff
+ fonts/roboto/Roboto-Medium.woff2
+ fonts/roboto/Roboto-Regular.woff
+ fonts/roboto/Roboto-Regular.woff2
+ fonts/roboto/Roboto-Thin.woff
+ fonts/roboto/Roboto-Thin.woff2
+ fonts/fontawesome-webfont.eot
+ fonts/fontawesome-webfont.svg
+ fonts/fontawesome-webfont.woff
+ fonts/fontawesome-webfont.ttf
+ fonts/fontawesome-webfont.woff2
+ fonts/FontAwesome.otf
+ css/font-awesome.css
+ css/materialize.css
+ css/mycss.css
+
+ 
+NETWORK:
+# All URLs that start with the following lines
+# are whitelisted.
+
+ 
+CACHE:
+# Additional items to cache.
