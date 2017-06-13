@@ -39,6 +39,7 @@ let Dil = {
     [`DiffName`] : `İsim`,
     [`Pestis`] : `#`,
     [`Gram`] : `#`,
+    [`SubTur`]: `Alt Tür`,
     [`Negative`] : `Negatif`,
     [`Shape`] : `Şekli`,
     [`Kokobasil`] : `#`,
