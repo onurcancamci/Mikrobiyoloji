@@ -10,12 +10,20 @@
 	</head>
 	<body class="">
 		
-		
-
-		
-		<div class="" id="bakteriPaneli">
+		<div class="card-panel grey lighten-4" id="topMenu">
+			<i class="fa fa-2x fa-align-justify blue-grey-text text-darken-3" aria-hidden="true" id="topMenuMenu" onclick="ToggleRightMenu()"></i>
+			<strong class="blue-grey-text text-darken-3" style="font-size:40pt;">Bakteriler</strong>
+		</div>
+		<div class="" id="topMenuHolder">
 			
 		</div>
+
+		<div class="" id="bakteriPaneliContainer">
+			<div class="" id="bakteriPaneli">
+				
+			</div>
+		</div>
+		
 		
 		<div class="card-panel blue-grey darken-1" id="leftPanel">
 			<i class="fa fa-chevron-left white-text" aria-hidden="true" id="leftPanelBack" onclick="ToggleBacteria()"></i>
@@ -27,29 +35,48 @@
 		</a>
 		<div class="card-panel blue-grey darken-1" id="bottomPanel">
 			<div id="filterCategoryContainer">
-				<!--<div class="card-panel grey lighten-4 filter-category">
-					Field:
-					<div class="filterElemanContainer">
-						<div class="card-panel orange-text text-darken-3">
-							Test
-						</div>
-					</div>
-				</div>-->
 
 			</div>
 		</div>
+		
+		<div class="" id="smallPanel" onclick="CloseSmallPanel()">
+			
+		</div>
+		
+		<div class="blue-grey-text text-darken-3 card-panel blue-grey darken-1" id="rightPanel">
+			
+			<i class="fa fa-2x fa-chevron-right white-text" style="margin-top:30px; margin-left:0px;" aria-hidden="true" id="rightPanelBack" onclick="ToggleRightMenu()"></i>
+			<span style="margin-right: 30px; right: 0px; margin-top: 20px; position: absolute;"><strong class="white-text" style="font-size: 50pt;">Menu</strong></span>
+			<div class="" id="rightPanelContents">
+				
+				<div class="card-panel grey lighten-4" style="">
+					<span class="blue-grey-text text-darken-3">Emegi Gecenler:
+					<li style="margin-top: 20px;">Onurcan Camci</li>
+					</span>
+				</div>
+				<div class="card-panel grey lighten-4" style="font-size: 25pt;">
+					<span class="blue-grey-text text-darken-3">Yararlanilan Kaynaklar:
+					
+					</span>
+				</div>
+				
+			</div>
+		</div>
+		
 		
 		<div class="" id="invisiblePanel">
 			
 		</div>
 		
-		<script></script>
+		
 		
 		<!--<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
 		<!--<script src="inobounce.js"></script>-->
 		<!--<script charset="UTF-8" src="materialize.js"></script>-->
+		<script charset="UTF-8" src="fastclick.js"></script>
 		<script charset="UTF-8" src="main.js"></script>
 		<script charset="UTF-8" src="bakteriler.js"></script>
+		<script charset="UTF-8" src="language.js"></script>
     <script charset="UTF-8" src="indexer.js"></script>
 	</body>
 </html>

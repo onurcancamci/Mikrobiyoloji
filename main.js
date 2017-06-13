@@ -10,17 +10,30 @@ if (!Array.prototype.last){
     };
 };
 
+if ('addEventListener' in document) {
+	document.addEventListener('DOMContentLoaded', function() {
+		FastClick.attach(document.body);
+	}, false);
+}
+
 
 let BottomPanelButtonActive = false;
 let BottomPanelButton = function () {
   let panel = document.querySelector("#bottomPanel");
   if(!BottomPanelButtonActive) {
     //panel.style.top = 0;
-    panel.style.transform = "translateY(-100vh)";
-    panel.style.webkitTransform = "translateY(-100vh)";
+    setTimeout(function () {
+      panel.style.transform = "translateY(-100%)";
+      panel.style.webkitTransform = "translateY(-100%)";
+    }, 10);
+    panel.style.display = "block";
   } else {
     panel.style.transform = "translateY(0)";
     panel.style.webkitTransform = "translateY(0)";
+    setTimeout(function () {
+      panel.style.display = "none";
+    }, 200);
+    
   }
   BottomPanelButtonActive = !BottomPanelButtonActive;
 }
@@ -59,21 +72,21 @@ let ToggleBacteria = function(id,btn) {
       let lp = document.querySelector("#leftPanel");
       document.querySelector("#leftPanelSpan").innerText = B.FamilyName + " " + B.DiffName;
       lp.appendChild(content);
+      lp.style.display = "block";
       setTimeout(function () {
-        //lp.style.left = 0;
         lp.style.transform = "translateX(101%)";
         lp.style.webkitTransform = "translateX(101%)";
+        
       }, 10);
       
     } else {
       let lp = document.querySelector("#leftPanel");
       leftPanelAnimating = true;
-      //lp.style.left = "-101vw";
       lp.style.transform = "translateX(0)";
       lp.style.webkitTransform = "translateX(0)";
       setTimeout(function () {
         let lp = document.querySelector("#leftPanel");
-        //lp.innerHTML = "";
+        lp.style.display = "none";
         document.querySelector("#invisiblePanel").appendChild(lp.querySelector(".bakteri-content"));
         leftPanelAnimating = false;
       }, 200);
@@ -85,29 +98,7 @@ let ToggleBacteria = function(id,btn) {
 
 
 
-let UnWrapField = function (val, socket) {
-  if(typeof val == "string") {
-    socket.appendChild(GetTextCard(val));
-  } else if(Array.isArray(val)) {
-    for(let v of val) {
-      UnWrapField(v, socket);
-    }
-  } else if(typeof val == "object" && typeof val["Name"] !== "undefined") {
-    let infoCard = GetInfoCard();
-    socket.appendChild(infoCard);
-    infoCard.appendChild(GetInfoField(val.Name));
-    
-    for(let f in val) {
-      if(f == "Name") continue;
-      
-      let nsocket = GetInfoField(f + ": ");
-      infoCard.appendChild(nsocket);
-      UnWrapField(val[f], nsocket);
-      
-    }
-    
-  }
-}
+
 
 
 let GetInfoField = function (text, color = "blue-grey") {
@@ -116,9 +107,9 @@ let GetInfoField = function (text, color = "blue-grey") {
   card.innerText = text;
   return card;
 }
-let GetInfoCard = function () {
+let GetInfoCard = function (color = "grey", shade = "lighten-3") {
   let card = document.createElement("div");
-  card.className = "card-panel grey lighten-3 infoCard";
+  card.className = `card-panel ${color} ${shade} infoCard`;
   return card;
 }
 let GetTextCard = function (text, color = "orange") {
@@ -160,8 +151,7 @@ let AddBacteriaToDisplay = function (B) {
   }
   let row = foundFamily.HTML.querySelector(".row");
   row.innerHTML += btnHtml;
-  B.HTML = `${B.FamilyName + "-" + B.DiffName}`;
-  console.log(B.HTML);
+  B._HTML = `${B.FamilyName + "-" + B.DiffName}`;
   foundFamily.Bakteriler.push(B);
   
 }
@@ -183,14 +173,18 @@ let CreateFamily = function (FamilyName) {
 }
 
 
-//{ Name : "FamilyName", Val : ["Yersinia"], HTML : <> }
-// ["FamilyName"]
-//let Categories = [];
 
+//filter menusu icin
 let AddCategory = function (name) {
   let categoryDiv = document.createElement("div");
   categoryDiv.className = "card-panel grey lighten-4 filter-category";
-  categoryDiv.innerText = name;
+  let nname = "";
+  let names = name.split("-");
+  for(n of names) {
+    nname += Sozluk(n) + " - ";
+  }
+  nname = nname.slice(0,nname.length - 3);
+  categoryDiv.innerText = nname + ":";
   let fec = document.createElement("div");
   fec.className = "filterElemanContainer";
   categoryDiv.appendChild(fec);
@@ -203,7 +197,7 @@ let AddCategory = function (name) {
 let AddEleman = function (name, socket, fieldName) {
   let div = document.createElement("div");
   div.className = "card-panel 0 orange-text text-darken-3 grey lighten-5";
-  div.innerText = name;
+  div.innerText = Sozluk(name);
   div.id = fieldName + "-" + name;
   div.onclick = function () {
     let status = this.className.split(" ")[1];
@@ -253,7 +247,24 @@ let StringRemoveLast = function(all) {
 }
 
 
-
+let RightMenuActive = false;
+let ToggleRightMenu = function () {
+  let rm = document.querySelector("#rightPanel");
+  if(!RightMenuActive) {
+    rm.style.display = "block";
+    setTimeout(function () {
+      rm.style.transform = "translateX(-100%)";
+      rm.style.webkitTransform = "translateX(-100%)";
+    }, 10);
+  } else {
+    rm.style.transform = "translateX(0)";
+    rm.style.webkitTransform = "translateX(0)";
+    setTimeout(function () {
+      rm.style.display = "none";
+    }, 200);
+  }
+  RightMenuActive = !RightMenuActive;
+}
 
 
 
