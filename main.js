@@ -100,7 +100,7 @@ let UnWrapField = function (val, socket) {
     for(let f in val) {
       if(f == "Name") continue;
       
-      let nsocket = GetInfoField(f);
+      let nsocket = GetInfoField(f + ": ");
       infoCard.appendChild(nsocket);
       UnWrapField(val[f], nsocket);
       
