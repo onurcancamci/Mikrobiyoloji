@@ -40,7 +40,8 @@ let ToggleBacteria = function(id,btn) {
       
       let B = Bakteriler.find(x => x.FamilyName == id.split("-")[0] && x.DiffName == id.split("-")[1]);
       
-      let content = document.createElement("div");
+      let content = B._content;
+      /*let content = document.createElement("div");
       content.className = "bakteri-content";
       for(field in B) {
         if(field == "HTML" || field[0] == "_") {
@@ -51,7 +52,7 @@ let ToggleBacteria = function(id,btn) {
         UnWrapField(B[field], socket);
         fieldInfoCard.appendChild(socket);
         content.appendChild(fieldInfoCard);
-      }
+      }*/
       
       
       
@@ -73,7 +74,8 @@ let ToggleBacteria = function(id,btn) {
       lp.style.webkitTransform = "translateX(0)";
       setTimeout(function () {
         let lp = document.querySelector("#leftPanel");
-        lp.innerHTML = "";
+        //lp.innerHTML = "";
+        document.querySelector("#invisiblePanel").appendChild(lp.querySelector(".bakteri-content"));
         leftPanelAnimating = false;
       }, 200);
     }

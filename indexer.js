@@ -149,7 +149,7 @@ for(let B of Bakteriler) {
   AddBacteriaToDisplay(B);
 }
 IndexResolver(TheIndex);
-/*
+
 for(let B of Bakteriler) {
   let content = document.createElement("div");
   content.className = "bakteri-content";
@@ -165,7 +165,7 @@ for(let B of Bakteriler) {
   }
   document.querySelector("#invisiblePanel").appendChild(content);
   B._content = content;
-}*/
+}
 
 console.log(TheIndex);
 
