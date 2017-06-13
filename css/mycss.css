@@ -96,6 +96,18 @@ body {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+
+.input-field.card-panel {
+  padding-top: 4px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  
+}
+#searchBakteri {
+  font-size: 40pt;
+  height: 66pt;
+}
+
 #smallPanel {
   position: fixed;
   top: 30%;
