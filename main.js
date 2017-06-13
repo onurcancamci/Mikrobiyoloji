@@ -15,9 +15,12 @@ let BottomPanelButtonActive = false;
 let BottomPanelButton = function () {
   let panel = document.querySelector("#bottomPanel");
   if(!BottomPanelButtonActive) {
-    panel.style.top = 0;
+    //panel.style.top = 0;
+    panel.style.transform = "translateY(-100vh)";
+    panel.style.webkitTransform = "translateY(-100vh)";
   } else {
-    panel.style.top = "100vh";
+    panel.style.transform = "translateY(0)";
+    panel.style.webkitTransform = "translateY(0)";
   }
   BottomPanelButtonActive = !BottomPanelButtonActive;
 }
@@ -37,7 +40,18 @@ let ToggleBacteria = function(id,btn) {
       
       let B = Bakteriler.find(x => x.FamilyName == id.split("-")[0] && x.DiffName == id.split("-")[1]);
       
-      let content = B._content;
+      let content = document.createElement("div");
+      content.className = "bakteri-content";
+      for(field in B) {
+        if(field == "HTML" || field[0] == "_") {
+          continue;
+        }
+        let fieldInfoCard = GetInfoCard();
+        let socket = GetInfoField(field + ": ");
+        UnWrapField(B[field], socket);
+        fieldInfoCard.appendChild(socket);
+        content.appendChild(fieldInfoCard);
+      }
       
       
       
@@ -46,13 +60,17 @@ let ToggleBacteria = function(id,btn) {
       lp.appendChild(GetSpan(B.FamilyName,"white"));
       lp.appendChild(content);
       setTimeout(function () {
-        lp.style.left = 0;
+        //lp.style.left = 0;
+        lp.style.transform = "translateX(101%)";
+        lp.style.webkitTransform = "translateX(101%)";
       }, 10);
       
     } else {
       let lp = document.querySelector("#leftPanel");
       leftPanelAnimating = true;
-      lp.style.left = "-101vw";
+      //lp.style.left = "-101vw";
+      lp.style.transform = "translateX(0)";
+      lp.style.webkitTransform = "translateX(0)";
       setTimeout(function () {
         let lp = document.querySelector("#leftPanel");
         lp.innerHTML = "";

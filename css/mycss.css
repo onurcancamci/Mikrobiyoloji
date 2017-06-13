@@ -90,7 +90,7 @@ body {
   -webkit-transition: all 0.2s linear;
   margin: 0;
   overflow: hidden;
-  
+  will-change: top;
   
 }
 #bakteriPaneli {
@@ -111,6 +111,7 @@ body {
   -webkit-transition: all 0.2s linear;
   margin: 0;
   overflow: hidden;
+  will-change: left;
 }
 
 #leftPanelBack {
@@ -134,8 +135,6 @@ body {
   left: -150vw;
   display: none;
 }
-
-
 
 
 
