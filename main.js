@@ -152,6 +152,9 @@ let AddBacteriaToDisplay = function (B) {
   let row = foundFamily.HTML.querySelector(".row");
   row.innerHTML += btnHtml;
   B._HTML = `${B.FamilyName + "-" + B.DiffName}`;
+  if(typeof B.SubTur !== "undefined") {
+    row.querySelector(`#${B._HTML}`).innerHTML += `<span class="white-text aile-bakteri-text" style="font-size: 20pt;">${B.SubTur}</span>`;
+  }
   foundFamily.Bakteriler.push(B);
   
 }
@@ -280,7 +283,7 @@ document.querySelector("#searchBakteri").addEventListener("input", function (e) 
     }) == -1) {
       document.querySelector(`#${B._HTML}`).parentElement.style.display = "none";
     } else {
-      document.querySelector(`#${B._HTML}`).parentElement.style.display = "block";
+      document.querySelector(`#${B._HTML}`).parentElement.style.display = "grid";
     }
   }
 });

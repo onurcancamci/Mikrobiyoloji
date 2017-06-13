@@ -33,7 +33,12 @@ let ObjectEkle = function (Val, Bakteri, Field, Parent = TheIndex, Path) {
 }
 let StringEkle = function (Val, Bakteri, Field, Parent = TheIndex, Path) {
   
-  if(typeof Genelleme[Val] != "undefined") {
+  if(typeof Genelleme[Val] != "undefined" && !Array.isArray(Genelleme[Val]) && typeof Genelleme[Val].Genelleme === "undefined") {
+    NullCheck(Field,Val,Parent);
+    if(!Parent[Field][Val].find(x => x == Bakteri)) {
+      Parent[Field][Val].push(Bakteri);
+    }
+  } else if(typeof Genelleme[Val] != "undefined") {
     let arr;
     if(!Array.isArray(Genelleme[Val])) {
       arr = Genelleme[Val].Genelleme;

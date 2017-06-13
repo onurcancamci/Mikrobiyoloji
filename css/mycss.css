@@ -48,6 +48,7 @@ body {
 }
 .card-panel.aile-bakteri {
   /*transition: all 0.2s linear;*/
+  display: grid;
 }
 /*.card-panel.aile-bakteri.active {
   position: absolute;
