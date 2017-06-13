@@ -71,6 +71,9 @@ let ToggleBacteria = function(id,btn) {
       
       let lp = document.querySelector("#leftPanel");
       document.querySelector("#leftPanelSpan").innerText = B.FamilyName + " " + B.DiffName;
+      if(typeof B.SubTur !== "undefined") {
+        document.querySelector("#leftPanelSpan").innerText += ` ${B.SubTur}`;
+      }
       lp.appendChild(content);
       lp.style.display = "block";
       setTimeout(function () {
@@ -127,7 +130,13 @@ let GetSpan = function (text, color = "blue-grey") {
 }
 
 
-
+let GetBakteriID = function (B) {
+  let id = `${B.FamilyName}-${B.DiffName}`;
+  if(typeof B.SubTur !== "undefined") {
+    id += `-${B.SubTur}`;
+  }
+  return id;
+}
 
 
 
@@ -138,7 +147,7 @@ let GetSpan = function (text, color = "blue-grey") {
 let Families = [];
 let AddBacteriaToDisplay = function (B) {
   let btnHtml = `<div class="col s6" >
-    <div class="card-panel aile-bakteri blue-grey darken-1" id="${B.FamilyName + "-" + B.DiffName}" onclick="ToggleBacteria(this.id,this)">
+    <div class="card-panel aile-bakteri blue-grey darken-1" id="${GetBakteriID(B)}" onclick="ToggleBacteria(this.id,this)">
       <span class="white-text aile-bakteri-text">${B.FamilyName[0]}. ${B.DiffName}</span>
     </div>
   </div>`;
@@ -151,7 +160,7 @@ let AddBacteriaToDisplay = function (B) {
   }
   let row = foundFamily.HTML.querySelector(".row");
   row.innerHTML += btnHtml;
-  B._HTML = `${B.FamilyName + "-" + B.DiffName}`;
+  B._HTML = `${GetBakteriID(B)}`;
   if(typeof B.SubTur !== "undefined") {
     row.querySelector(`#${B._HTML}`).innerHTML += `<span class="white-text aile-bakteri-text" style="font-size: 20pt;">${B.SubTur}</span>`;
   }
@@ -274,8 +283,8 @@ let ToggleRightMenu = function () {
 document.querySelector("#searchBakteri").addEventListener("input", function (e) {
   let text = StringIngAlfabe(e.target.value).toLowerCase();
   for(B of Bakteriler) {
-    //console.log(SearchIndex[B.FamilyName + "-" + B.DiffName]);
-    if(SearchIndex[B.FamilyName + "-" + B.DiffName].findIndex((e,i,arr) => {
+    //console.log(SearchIndex[GetBakteriID(B)]);
+    if(SearchIndex[GetBakteriID(B)].findIndex((e,i,arr) => {
       if(e.includes(text)) {
         //console.log(e);
         return true;

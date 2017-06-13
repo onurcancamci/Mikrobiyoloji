@@ -291,11 +291,11 @@ let ObjectEkleSearch = function (Val, Bakteri, Field) {
 }
 let StringEkleSearch = function (Val, Bakteri, Field) {
   
-  if(typeof SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName] == "undefined") {
-    SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName] = [];
+  if(typeof SearchIndex[GetBakteriID(Bakteri)] == "undefined") {
+    SearchIndex[GetBakteriID(Bakteri)] = [];
   }
   //baska diller de ekle
-  SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName].push(StringIngAlfabe(Sozluk(Val)).toLowerCase());
+  SearchIndex[GetBakteriID(Bakteri)].push(StringIngAlfabe(Sozluk(Val)).toLowerCase());
   
 }
 let ArrayEkleSearch = function (Val, Bakteri, Field) {
