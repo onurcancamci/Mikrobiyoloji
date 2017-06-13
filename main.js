@@ -57,8 +57,7 @@ let ToggleBacteria = function(id,btn) {
       
       
       let lp = document.querySelector("#leftPanel");
-      lp.innerHTML += `<i class="fa fa-chevron-left white-text" aria-hidden="true" id="leftPanelBack" onclick="ToggleBacteria()"></i>`;
-      lp.appendChild(GetSpan(B.FamilyName,"white"));
+      document.querySelector("#leftPanelSpan").innerText = B.FamilyName + " " + B.DiffName;
       lp.appendChild(content);
       setTimeout(function () {
         //lp.style.left = 0;
