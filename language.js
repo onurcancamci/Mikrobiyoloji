@@ -129,7 +129,7 @@ let Sozluk = function (kelime) {
 //ya Array
 //ya {Genelleme:[], ...}
 let Genelleme = {
-  ["Gentamisin"] : ["Antibiyotik", "Aminoglikozid"],
+  ["Gentamisin"] : ["Antibiyotik", "Aminoglikozid", "Gentamisin"],
 }
 
 

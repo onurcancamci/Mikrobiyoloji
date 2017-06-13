@@ -172,7 +172,7 @@ IndexResolver(TheIndex);
 
 let TextCardClickEkle = function (obj, text) {
   if(typeof Genelleme[text] != "undefined") {
-    console.log(text);
+    //console.log(text);
     obj.onclick = function () {
       let sp = document.querySelector("#smallPanel");
       if(sp.style.display == "block") {
@@ -257,12 +257,71 @@ for(let B of Bakteriler) {
 
 
 
+//document.querySelector(`#${Bakteriler[0]._HTML}`).parentElement.style.display = "block";
+
+let StringIngAlfabe = function (text) {
+  let ntext = "";
+  for(let k = 0; k < text.length; k++) {
+    if(text[k] == "ç") ntext += "c";
+    else if(text[k] == "ö") ntext += "o";
+    else if(text[k] == "ğ") ntext += "g";
+    else if(text[k] == "ü") ntext += "u";
+    else if(text[k] == "ş") ntext += "s";
+    else if(text[k] == "ı") ntext += "i";
+    else ntext += text[k];
+  }
+  return ntext;
+}
 
 
+let SearchIndex = {};
 
+let ObjectEkleSearch = function (Val, Bakteri, Field) {
+  StringEkleSearch(Val.Name, Bakteri, Field);
+  
+  for(let subfields in Val) {
+    ObjRouterSearch(Val[subfields],Bakteri, subfields);
+  }
+  
+}
+let StringEkleSearch = function (Val, Bakteri, Field) {
+  
+  if(typeof SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName] == "undefined") {
+    SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName] = [];
+  }
+  //baska diller de ekle
+  SearchIndex[Bakteri.FamilyName + "-" + Bakteri.DiffName].push(StringIngAlfabe(Sozluk(Val)).toLowerCase());
+  
+}
+let ArrayEkleSearch = function (Val, Bakteri, Field) {
+  for(let Vs of Val) {
+    ObjRouterSearch(Vs, Bakteri, Field);
+  }
+}
+let ObjRouterSearch = function (Val, Bakteri, Field) {
+  if(Field[0] == "_") return;
+  //if(!IndexFieldFilter(Field,Path)) return;
+  
+  
+  if(typeof Val == "string") {
+    StringEkleSearch(Val, Bakteri, Field);
+    
+  } else if(Array.isArray(Val)) {
+    ArrayEkleSearch(Val, Bakteri, Field);
+    
+  } else if(typeof Val == "object") {
+    ObjectEkleSearch(Val, Bakteri, Field);
+  }
+}
+let BakteriRouterSearch = function (Bakteri) {
+  for(let Field in Bakteri) {
+    ObjRouterSearch(Bakteri[Field], Bakteri, Field);
+  }
+}
 
-
-
+for(let B of Bakteriler) {
+  BakteriRouterSearch(B);
+}
 
 /*
 let ObjectEkleSozluk = function (Val, Bakteri, Field) {
@@ -332,7 +391,7 @@ while (TSBS == SBS) {
 
 
 
-console.log(TheIndex);
+//console.log(TheIndex);
 
 
 

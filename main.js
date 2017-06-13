@@ -268,7 +268,22 @@ let ToggleRightMenu = function () {
 
 
 
-
+document.querySelector("#searchBakteri").addEventListener("input", function (e) {
+  let text = StringIngAlfabe(e.target.value).toLowerCase();
+  for(B of Bakteriler) {
+    //console.log(SearchIndex[B.FamilyName + "-" + B.DiffName]);
+    if(SearchIndex[B.FamilyName + "-" + B.DiffName].findIndex((e,i,arr) => {
+      if(e.includes(text)) {
+        //console.log(e);
+        return true;
+      }
+    }) == -1) {
+      document.querySelector(`#${B._HTML}`).parentElement.style.display = "none";
+    } else {
+      document.querySelector(`#${B._HTML}`).parentElement.style.display = "block";
+    }
+  }
+});
 
 
 
