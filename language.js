@@ -5,7 +5,7 @@ let IndexFieldFilterObj = {
   ["Name"] : false,
   ["Aciklama"] : false,
   ["Resim"] : false,
-  //["DiffName"] : false,
+  //["TurAdi"] : false,
   
 };
 let IndexPathFilterObj = {
@@ -36,9 +36,10 @@ let IndexFieldFilter = function (field, path) {
 let Dil = {
   Turkce : { 
     [`image`] : `Resim`,
-    [`FamilyName`] : `Aile`,
+    [`CinsAdi`] : `Cins`,
     [`Yersinia`] : `#`,
-    [`DiffName`] : `İsim`,
+    [`TurAdi`] : `Tür`,
+    [`AileAdi`]: `Aile`,
     [`Pestis`] : `#`,
     [`Gram`] : `#`,
     [`SubTur`]: `Alt Tür`,

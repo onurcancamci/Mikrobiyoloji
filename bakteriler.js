@@ -5,8 +5,8 @@ let Bakteriler = [];
 
 /*
 Zorunlu Alanlar
-FamilyName
-DiffName
+CinsAdi
+TurAdi
 Gram
 Shape
 Solunum
@@ -20,8 +20,9 @@ Kapsulsuz
 */
 //yersinia
 Bakteriler.push({
-  FamilyName : "Yersinia",
-  DiffName : "Pestis",
+  CinsAdi : "Yersinia",
+  TurAdi : "Pestis",
+  AileAdi: "Enterobacteriaceae",
   Gram : "Negative",
   Shape : "Kokobasil",
   Hareket: "Hareketsiz",
@@ -58,8 +59,9 @@ Bakteriler.push({
 //Y. Enterocolitica
 
 Bakteriler.push({
-  FamilyName : "Yersinia",
-  DiffName : "Enterocolitica",
+  CinsAdi : "Yersinia",
+  TurAdi : "Enterocolitica",
+  AileAdi: "Enterobacteriaceae",
   Gram : "Negative",
   Shape : "Basil",
   Solunum : "Aerob_Ve_Fakultatif_Anaerob",
@@ -85,9 +87,10 @@ Bakteriler.push({
 
 
 Bakteriler.push({
-  FamilyName: "Klebsiella",
-  DiffName: "Pneumoniae",
+  CinsAdi: "Klebsiella",
+  TurAdi: "Pneumoniae",
   SubTur: "pneumoniae",
+  AileAdi: "Enterobacteriaceae",
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -133,9 +136,10 @@ Bakteriler.push({
 
 
 Bakteriler.push({
-  FamilyName: "Klebsiella",
-  DiffName: "Pneumoniae",
+  CinsAdi: "Klebsiella",
+  TurAdi: "Pneumoniae",
   SubTur: "ozaenae",
+  AileAdi: "Enterobacteriaceae",
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
@@ -153,8 +157,9 @@ Bakteriler.push({
   Resim: "image@Agarda@images/klebsiella_ozaenae/agar.jpg",
 });
 Bakteriler.push({
-  FamilyName: "Klebsiella",
-  DiffName: "Granulomatis",
+  CinsAdi: "Klebsiella",
+  TurAdi: "Granulomatis",
+  AileAdi: "Enterobacteriaceae",
   Gram: "Negative",
   Shape:  "Basil",
   Kapsul: "Kapsullu",
@@ -166,8 +171,9 @@ Bakteriler.push({
   Aciklama : ["Cinsel Yolla Bulasir","Burda Yeterince Bilgi Henuz Yok"],
 });
 Bakteriler.push({
-  FamilyName: "Klebsiella",
-  DiffName: "Variicola",
+  CinsAdi: "Klebsiella",
+  TurAdi: "Variicola",
+  AileAdi: "Enterobacteriaceae",
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
@@ -186,17 +192,101 @@ Bakteriler.push({
 
 
 
+
+//Enterobacter
+Bakteriler.push({
+  CinsAdi: "Enterobacter",
+  TurAdi: "Aerogenes",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Ornitin Dekarboksilaz"],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Laktoz Fermente Eder"
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik : "Kolistin",
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : ["Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
+});
+Bakteriler.push({
+  CinsAdi: "Enterobacter",
+  TurAdi: "Cloacae",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Ornitin Dekarboksilaz",{Name: "Ureaz", Aciklama:"65%"}],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Laktoz Fermente Eder"
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik : "Kolistin",
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : ["Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
+});
+
+//Serratia
+Bakteriler.push({
+  CinsAdi: "Serratia",
+  TurAdi: "Marcescens",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Kokobasil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Dnaz","Lipaz","Gelatinaz"],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Laktoz Fermente Etmez"
+  }],
+  Direnc : ["Vankomisin","Kolistin"],
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : [{Name:"Kirmizi Pigment", Aciklama: ["Tum suslari uretmeyebilir","Pembe Pigment uretebilir"]},"Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
+});
+Bakteriler.push({
+  CinsAdi: "Serratia",
+  TurAdi: "Rubidaea",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Kokobasil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Dnaz","Lipaz","Gelatinaz"],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Laktoz Fermente Eder"
+  }],
+  Direnc : ["Vankomisin","Kolistin"],
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : ["Kirmizi Pigment","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
+});
+
+
+
+
 /*
 for (var i = 0; i < 1000; i++) {
   let B = JSON.parse(JSON.stringify(Bakteriler[0]));
-  B.DiffName += i;
+  B.TurAdi += i;
   Bakteriler.push(B);
 }
 */
 
 
 
-
+Bakteriler.sort((a, b) => {
+  let a1 = a.CinsAdi.toLowerCase();
+  let b1 = b.CinsAdi.toLowerCase();
+  if(a1 < b1) return -1;
+  if(a1 > b1) return 1;
+  return 0;
+});
 
 
 

@@ -45,7 +45,7 @@ let RefreshRules = function () {
       }
     }
     let result = needTest && !failTest;
-    //console.log(B.DiffName,result);
+    //console.log(B.TurAdi,result);
     //console.log(html);
     if(result) {
       html.className = `card-panel aile-bakteri blue-grey darken-1`;

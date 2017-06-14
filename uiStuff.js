@@ -137,13 +137,13 @@ let Families = [];
 let AddBacteriaToDisplay = function (B) {
   let btnHtml = `<div class="col s6" style="display:grid;" >
     <div class="card-panel aile-bakteri blue-grey darken-1" id="${GetBakteriID(B)}" onclick="ToggleBacteria(this.id,this)">
-      <span class="white-text aile-bakteri-text">${B.FamilyName[0]}. ${B.DiffName}</span>
+      <span class="white-text aile-bakteri-text">${B.CinsAdi[0]}. ${B.TurAdi}</span>
     </div>
   </div>`;
   
-  let foundFamily = Families.find(x => x.Name == B.FamilyName);
+  let foundFamily = Families.find(x => x.Name == B.CinsAdi);
   if(!foundFamily) {
-    foundFamily = CreateFamily(B.FamilyName);
+    foundFamily = CreateFamily(B.CinsAdi);
     let rowHtml = '<div class="row aile-row"></div>';
     onurcan.querySelector(foundFamily.HTML).innerHTML += rowHtml;
   }
@@ -157,20 +157,19 @@ let AddBacteriaToDisplay = function (B) {
   foundFamily.Bakteriler.push(B);
   
 }
-let CreateFamily = function (FamilyName) {
-  let fHtml = `<div class="card-panel aile-panel grey lighten-3" id="${FamilyName}-Panel">
-                   <div class="blue-grey-text text-darken-3 aile-isim">${FamilyName}</div>
+let CreateFamily = function (CinsAdi) {
+  let fHtml = `<div class="card-panel aile-panel grey lighten-3" style="display:block;" id="${CinsAdi}-Panel">
+                   <div class="blue-grey-text text-darken-3 aile-isim">${CinsAdi}</div>
                </div>`;
   let bp = onurcan.querySelector("#bakteriPaneli");
   bp.innerHTML += fHtml;
   let family = {
-    Name : FamilyName,
+    Name : CinsAdi,
     Bakteriler : [],
     VisibleCount : 0,
-    HTML : `#${FamilyName}-Panel`
+    HTML : `#${CinsAdi}-Panel`
   };
   Families.push(family);
-  onurcan.querySelector(family.HTML).style.display = "block";
   return family;
 }
 
@@ -189,11 +188,11 @@ onurcan.querySelector("#searchBakteri").addEventListener("input", function (e) {
         return true;
       } else return false;
     }) == -1) {
-      Families.find(x => x.Name == B.FamilyName).VisibleCount += onurcan.querySelector(`#${B._HTML}`).parentElement.style.display == "none" ? 0 : -1;
+      Families.find(x => x.Name == B.CinsAdi).VisibleCount += onurcan.querySelector(`#${B._HTML}`).parentElement.style.display == "none" ? 0 : -1;
       onurcan.querySelector(`#${B._HTML}`).parentElement.style.display = "none";
       
     } else {
-      Families.find(x => x.Name == B.FamilyName).VisibleCount += onurcan.querySelector(`#${B._HTML}`).parentElement.style.display == "grid" ? 0 : 1;
+      Families.find(x => x.Name == B.CinsAdi).VisibleCount += onurcan.querySelector(`#${B._HTML}`).parentElement.style.display == "grid" ? 0 : 1;
       onurcan.querySelector(`#${B._HTML}`).parentElement.style.display = "grid";
       
     }
@@ -241,7 +240,7 @@ let ToggleBacteria = function(id,btn) {
       leftPanelId = id;
       leftPanelBtn = btn;
       
-      let B = Bakteriler.find(x => x.FamilyName == id.split("-")[0] && x.DiffName == id.split("-")[1]);
+      let B = Bakteriler.find(x => x.CinsAdi == id.split("-")[0] && x.TurAdi == id.split("-")[1]);
       
       let content = B._content;
       
@@ -249,7 +248,7 @@ let ToggleBacteria = function(id,btn) {
       
       
       let lp = onurcan.querySelector("#leftPanel");
-      onurcan.querySelector("#leftPanelSpan").innerText = B.FamilyName + " " + B.DiffName;
+      onurcan.querySelector("#leftPanelSpan").innerText = B.CinsAdi + " " + B.TurAdi;
       if(typeof B.SubTur !== "undefined") {
         onurcan.querySelector("#leftPanelSpan").innerText += ` ${B.SubTur}`;
       }

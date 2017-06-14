@@ -1,6 +1,6 @@
-//test
+
 let GetBakteriID = function (B) {
-  let id = `${B.FamilyName}-${B.DiffName}`;
+  let id = `${B.CinsAdi}-${B.TurAdi}`;
   if(typeof B.SubTur !== "undefined") {
     id += `-${B.SubTur}`;
   }
