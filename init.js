@@ -10,7 +10,7 @@ for(let B of Bakteriler) {
 }
 
 IndexResolver(TheIndex);
-
+IndexFamilies();
 PremakeLeftPanel();
 
 if(HaveNotification) {
@@ -20,6 +20,8 @@ if(HaveNotification) {
 if(Debug) {
   document.querySelector("#titleText").innerText += " (Debug)";
 }
+
+SortCinsler();
 
 //asd
 //SozlukBuilderStart();

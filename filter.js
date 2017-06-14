@@ -3,9 +3,13 @@
 
 
 let Rules = {};
+let AilePriority = {};//Yersinia : false, Citrobacter: true
+let AileCount = {};
 let FilterRule = function(id, status) {
   Rules[id] = status;
   RefreshRules();
+  PriortyAssign();
+  SortCinsler();
 }
 let ReachArray = function (path, eleman) {
   let obj = TheIndex;
@@ -48,21 +52,73 @@ let RefreshRules = function () {
     //console.log(B.TurAdi,result);
     //console.log(html);
     if(result) {
-      html.className = `card-panel aile-bakteri blue-grey darken-1`;
+      if(html.className != `card-panel aile-bakteri blue-grey darken-1`) {
+        html.className = `card-panel aile-bakteri blue-grey darken-1`;
+        AileCount[B.CinsAdi]++;
+      }
+      
     } else {
-      html.className = `card-panel aile-bakteri blue-grey lighten-3`;
+      if(html.className != `card-panel aile-bakteri blue-grey lighten-3`) {
+        html.className = `card-panel aile-bakteri blue-grey lighten-3`;
+        AileCount[B.CinsAdi]--;
+      }
     }
   }
-  
+}
+
+
+let IndexFamilies = function () {
+  for(f of Families) {
+    AilePriority[f.Name] = true;
+    AileCount[f.Name] = f.VisibleCount;
+  }
+}
+let PriortyAssign = function () {
+  for(aile in AileCount) {
+    if(AileCount[aile] == 0) {
+      AilePriority[aile] = false;
+    } else {
+      AilePriority[aile] = true;
+    }
+  }
 }
 
 
 
+let localCompare = function (a, b) {
+  let an = a.id.split("-")[0];
+  let bn = b.id.split("-")[0];
+  if(typeof AilePriority[an] === "undefined") {
+    AilePriority[an] = true;
+  }
+  if(typeof AilePriority[bn] === "undefined") {
+    AilePriority[bn] = true;
+  }
+  
+  if(AilePriority[an] && !AilePriority[bn]) {
+    return -1;
+  } else if(!AilePriority[an] && AilePriority[bn]) {
+    return 1;
+  } else {
+    if(an > bn) {
+      return 1;
+    } else if (an < bn) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+}
 
-
-
-
-
+let SortCinsler = function () {
+  let ailelernl = document.querySelectorAll("#bakteriPaneli > .aile-panel");
+  var aileler = [];
+  for(var i = 0, n; n = ailelernl[i]; ++i) aileler.push(n);
+  aileler.sort(localCompare);
+  for(let k = 0; k < aileler.length; k++) {
+    aileler[k].parentNode.appendChild(aileler[k]);
+  }
+}
 
 
 

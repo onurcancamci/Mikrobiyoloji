@@ -333,7 +333,7 @@ Bakteriler.push({
 
 
 
-
+/*
 Bakteriler.sort((a, b) => {
   let a1 = a.CinsAdi.toLowerCase();
   let b1 = b.CinsAdi.toLowerCase();
@@ -357,7 +357,7 @@ Bakteriler.sort((a, b) => {
   }
 });
 
-
+*/
 
 
 

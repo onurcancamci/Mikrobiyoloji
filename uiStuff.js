@@ -304,7 +304,6 @@ let ToggleRightMenu = function () {
 
 
 
-
 let GetInfoField = function (text, color = "blue-grey") {
   let card = document.createElement("div");
   card.className = `${color}-text text-darken-3 card-field`;
