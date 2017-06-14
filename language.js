@@ -4,6 +4,7 @@
 let IndexFieldFilterObj = {
   ["Name"] : false,
   ["Aciklama"] : false,
+  ["Resim"] : false,
   //["DiffName"] : false,
   
 };

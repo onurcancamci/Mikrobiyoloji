@@ -91,11 +91,11 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Laktaz","Ureaz","Sitrat","VP?"],
+  Enzimler: ["Laktaz","Ureaz","Sitrat","VP?","Katalaz"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   KulturOrtami: [{
-    Name: "Basit Besiyerleri",
+    Name: "MacConkey Agar",
     Gorunus: "Mukoid",
     Aciklama: "Laktoz Fermente Eder"
   }],
@@ -129,6 +129,61 @@ Bakteriler.push({
   Resim : ["image@Agarda@images/Klebsiella_Pneumoniae_01.png","image@Mikroskopta@images/klebsiella_pneumoniae_mikroskop.jpg"],
   
 });
+
+
+
+Bakteriler.push({
+  FamilyName: "Klebsiella",
+  DiffName: "Pneumoniae",
+  SubTur: "ozaenae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob_Ve_Fakultatif_Anaerob",
+  Enzimler: ["Katalaz"],
+  Hareket: "Hareketsiz",
+  Kapsul: "Kapsullu",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: "Mukoid",
+    Aciklama: ["48 saatte olusur"]
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik : "Kolistin",
+  Aciklama : "Burda Yeterince Bilgi Henuz Yok",
+  Resim: "image@Agarda@images/klebsiella_ozaenae/agar.jpg",
+});
+Bakteriler.push({
+  FamilyName: "Klebsiella",
+  DiffName: "Granulomatis",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Kapsul: "Kapsullu",
+  Hareket: "Hareketsiz",
+  KulturOrtami: [{
+    Name: "Monosit Kultur Sistemi",
+    Aciklama: ["Hucresiz Ortamda Uretilemez"],
+  }],
+  Aciklama : ["Cinsel Yolla Bulasir","Burda Yeterince Bilgi Henuz Yok"],
+});
+Bakteriler.push({
+  FamilyName: "Klebsiella",
+  DiffName: "Variicola",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob_Ve_Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Ureaz"],
+  Hareket: "Hareketsiz",
+  Kapsul: "Kapsullu",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: "Mukoid",
+    Aciklama: "Laktoz Fermente Eder"
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik : "Kolistin",
+  Aciklama : "Burda Yeterince Bilgi Henuz Yok",
+});
+
 
 
 /*

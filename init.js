@@ -13,6 +13,10 @@ IndexResolver(TheIndex);
 
 PremakeLeftPanel();
 
+if(HaveNotification) {
+  document.querySelector("#notificationCircle").style.display = "block";
+}
+
 
 //SozlukBuilderStart();
 

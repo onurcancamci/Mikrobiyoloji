@@ -200,9 +200,9 @@ onurcan.querySelector("#searchBakteri").addEventListener("input", function (e) {
   }
   for(family of Families) {
     if(family.VisibleCount == 0) {
-      onurcan.querySelector(family.HTML).style.display = "none";
+      document.querySelector(family.HTML).style.display = "none";
     } else {
-      onurcan.querySelector(family.HTML).style.display = "block";
+      document.querySelector(family.HTML).style.display = "block";
     }
   }
 });
@@ -344,9 +344,6 @@ let GetImage = function (path) {
 }
 
 
-if(HaveNotification) {
-  document.querySelector("#notificationCircle").style.display = "block";
-}
 
 
 
