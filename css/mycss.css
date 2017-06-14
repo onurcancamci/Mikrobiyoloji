@@ -82,18 +82,20 @@ body {
 
 .card-panel.filter-category {
   width: 55%;
-  margin-top: 100px;
   margin-left: 20px;
+  height: 100%;
 }
-#filterCategoryContainer {
+.filterCategoryContainer {
   width: 100%;
+  height: 47.5%;
+  padding-top: 20px;
   overflow-y: hidden;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
   display: -webkit-inline-box;
 }
 .filterElemanContainer {
-  height: 80%;
+  height: 90%;
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -148,7 +150,7 @@ body {
   margin: 0;
   overflow: hidden;
   will-change: top;
-  display: none;
+  /*display: none;*/
   
 }
 #bakteriPaneli {
@@ -197,6 +199,29 @@ body {
   width: 25%;
   top: 95%;
   left: 37.5%;
+}
+#bottomPanelClear {
+  position: fixed;
+  z-index: 11;
+  font-size: 30pt;
+  padding-top: 1vh;
+  height: 4%;
+  width: 25%;
+  top: 95%;
+  left: 10%;
+  display: none;
+}
+#bottomPanelCount {
+  position: fixed;
+  z-index: 11;
+  font-size: 30pt;
+  padding-top: 0.4vh;
+  height: 4%;
+  width: 25%;
+  top: 95%;
+  left: 65%;
+  text-align: center;
+  display: none;
 }
 
 #invisiblePanel {

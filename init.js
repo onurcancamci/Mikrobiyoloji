@@ -21,7 +21,7 @@ if(Debug) {
   document.querySelector("#titleText").innerText += " (Debug)";
 }
 
-SortCinsler();
+FilterRuleQueExec();
 
 //asd
 //SozlukBuilderStart();

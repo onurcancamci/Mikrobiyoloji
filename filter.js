@@ -5,11 +5,25 @@
 let Rules = {};
 let AilePriority = {};//Yersinia : false, Citrobacter: true
 let AileCount = {};
+let FilterQue = [];
+let FilterRuleQue = function (id,status) {
+  FilterQue.push({id,status});
+}
+let FilterRuleQueExec = function () {
+  for(q of FilterQue) {
+    Rules[q.id] = q.status;
+  }
+  RefreshRules();
+  PriortyAssign();
+  SortCinsler();
+  onurcan.querySelector("#bottomPanelCount").innerText = AktifBakteriCount;
+}
 let FilterRule = function(id, status) {
   Rules[id] = status;
   RefreshRules();
   PriortyAssign();
   SortCinsler();
+  onurcan.querySelector("#bottomPanelCount").innerText = AktifBakteriCount;
 }
 let ReachArray = function (path, eleman) {
   let obj = TheIndex;
@@ -66,7 +80,7 @@ let RefreshRules = function () {
   }
 }
 
-
+let AktifBakteriCount = 0;
 let IndexFamilies = function () {
   for(f of Families) {
     AilePriority[f.Name] = true;
@@ -74,10 +88,12 @@ let IndexFamilies = function () {
   }
 }
 let PriortyAssign = function () {
+  AktifBakteriCount = 0;
   for(aile in AileCount) {
     if(AileCount[aile] == 0) {
       AilePriority[aile] = false;
     } else {
+      AktifBakteriCount += AileCount[aile];
       AilePriority[aile] = true;
     }
   }

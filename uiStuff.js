@@ -84,7 +84,11 @@ let IndexResolver = function (obj, alanPrefix = "") {
     }
   }
 }
+
+
 //filter menusu icin
+let AllFilterElemans = [];
+let binct = 0;
 let AddCategory = function (name) {
   let categoryDiv = document.createElement("div");
   categoryDiv.className = "card-panel grey lighten-4 filter-category";
@@ -98,9 +102,13 @@ let AddCategory = function (name) {
   let fec = document.createElement("div");
   fec.className = "filterElemanContainer";
   categoryDiv.appendChild(fec);
+  if(binct == 0) {
+    document.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
+  } else {
+    document.querySelector("#filterCategoryContainer2").appendChild(categoryDiv);
+  }
   
-  onurcan.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
-  
+  binct = (binct + 1) % 2;
   return fec;
   
 }
@@ -123,11 +131,44 @@ let AddEleman = function (name, socket, fieldName) {
     FilterRule(this.id, status);
     
   }
+  AllFilterElemans.push(div);
   socket.appendChild(div);
   return div;
 }
 
-
+let BottomPanelButtonActive = false;
+let BottomPanelButton = function () {
+  let panel = onurcan.querySelector("#bottomPanel");
+  let clear = onurcan.querySelector("#bottomPanelClear");
+  let count = onurcan.querySelector("#bottomPanelCount");
+  if(!BottomPanelButtonActive) {
+    //panel.style.top = 0;
+    setTimeout(function () {
+      panel.style.transform = "translateY(-100%)";
+      panel.style.webkitTransform = "translateY(-100%)";
+    }, 10);
+    //panel.style.display = "block";
+    clear.style.display = "block";
+    count.style.display = "block";
+  } else {
+    panel.style.transform = "translateY(0)";
+    panel.style.webkitTransform = "translateY(0)";
+    clear.style.display = "none";
+    count.style.display = "none";
+    setTimeout(function () {
+      //panel.style.display = "none";
+    }, 200);
+    
+  }
+  BottomPanelButtonActive = !BottomPanelButtonActive;
+}
+let BottomPanelClear = function () {
+  for(div of AllFilterElemans) {
+    div.className = "card-panel 0 orange-text text-darken-3 grey lighten-5";
+    FilterRuleQue(div.id, 0);
+  }
+  FilterRuleQueExec();
+}
 
 
 
@@ -178,7 +219,7 @@ let CreateFamily = function (CinsAdi) {
 
 
 
-onurcan.querySelector("#searchBakteri").addEventListener("input", function (e) {
+document.querySelector("#searchBakteri").addEventListener("input", function (e) {
   let text = StringIngAlfabe(e.target.value).toLowerCase();
   for(B of Bakteriler) {
     //console.log(SearchIndex[GetBakteriID(B)]);
@@ -208,26 +249,9 @@ onurcan.querySelector("#searchBakteri").addEventListener("input", function (e) {
 
 
 
-let BottomPanelButtonActive = false;
-let BottomPanelButton = function () {
-  let panel = onurcan.querySelector("#bottomPanel");
-  if(!BottomPanelButtonActive) {
-    //panel.style.top = 0;
-    setTimeout(function () {
-      panel.style.transform = "translateY(-100%)";
-      panel.style.webkitTransform = "translateY(-100%)";
-    }, 10);
-    panel.style.display = "block";
-  } else {
-    panel.style.transform = "translateY(0)";
-    panel.style.webkitTransform = "translateY(0)";
-    setTimeout(function () {
-      panel.style.display = "none";
-    }, 200);
-    
-  }
-  BottomPanelButtonActive = !BottomPanelButtonActive;
-}
+
+
+
 
 let leftPanelActive = false;
 let leftPanelId;
