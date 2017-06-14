@@ -5,7 +5,7 @@ let IndexFieldFilterObj = {
   ["Name"] : false,
   ["Aciklama"] : false,
   ["Resim"] : false,
-  //["TurAdi"] : false,
+  ["TurAdi"] : false,
   
 };
 let IndexPathFilterObj = {
@@ -136,7 +136,8 @@ let Genelleme = {
   ["Gentamisin"] : ["Antibiyotik", "Aminoglikozid", "Gentamisin"],
   ["K"] : {
     Aciklama: ["Kapsul Antijeni"]
-  }
+  },
+  [`Bircok Kultur`]: [`MacConkey Agar`,`Bircok Kultur`],
 }
 
 

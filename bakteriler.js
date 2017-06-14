@@ -18,7 +18,12 @@ Hareket
 Yazmak yerine bos birak: 
 Kapsulsuz
 */
-//yersinia
+
+
+
+
+
+//Yersinia
 Bakteriler.push({
   CinsAdi : "Yersinia",
   TurAdi : "Pestis",
@@ -54,10 +59,6 @@ Bakteriler.push({
   ],
   
 });
-
-
-//Y. Enterocolitica
-
 Bakteriler.push({
   CinsAdi : "Yersinia",
   TurAdi : "Enterocolitica",
@@ -86,6 +87,10 @@ Bakteriler.push({
 });
 
 
+
+
+
+//Klebsiella
 Bakteriler.push({
   CinsAdi: "Klebsiella",
   TurAdi: "Pneumoniae",
@@ -132,9 +137,6 @@ Bakteriler.push({
   Resim : ["image@Agarda@images/Klebsiella_Pneumoniae_01.png","image@Mikroskopta@images/klebsiella_pneumoniae_mikroskop.jpg"],
   
 });
-
-
-
 Bakteriler.push({
   CinsAdi: "Klebsiella",
   TurAdi: "Pneumoniae",
@@ -189,7 +191,25 @@ Bakteriler.push({
   Duyarlilik : "Kolistin",
   Aciklama : "Burda Yeterince Bilgi Henuz Yok",
 });
-
+Bakteriler.push({
+  CinsAdi: "Klebsiella",
+  TurAdi: "Oxytoca",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Ureaz","Tryptophanase"],
+  Hareket: "Hareketsiz",
+  Kapsul: "Kapsullu",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: "Mukoid",
+    Aciklama: "Laktoz Fermente Eder"
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik : "Kolistin",
+  Aciklama : "Burda Yeterince Bilgi Henuz Yok",
+});
 
 
 
@@ -264,19 +284,53 @@ Bakteriler.push({
   }],
   Direnc : ["Vankomisin","Kolistin"],
   VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
-  Aciklama : ["Kirmizi Pigment","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
+  Aciklama : ["Kirmizi Pigment","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok"],
+});
+
+//Citrobacter
+Bakteriler.push({
+  CinsAdi: "Citrobacter",
+  TurAdi: "Koseri",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob_Ve_Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz","Tryptophanase"],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: ["Mukoid","Puturlu"],
+    Aciklama: ["Laktoz Fermente Eder","Mukoid veya Puturlu gorunebilir"]
+  }],
+  Direnc : ["Vankomisin"],
+  Duyarlilik: "Kolistin",
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : ["Karbon kaynagi olarak sadece Sitrat kullanabilir","Normal Florada Bulunur?","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok"],
+});
+Bakteriler.push({
+  CinsAdi: "Citrobacter",
+  TurAdi: "Freundii",
+  AileAdi: "Enterobacteriaceae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Laktaz"],
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: ["Mukoid","Puturlu"],
+    Aciklama: ["Laktoz Fermente Eder","Mukoid veya Puturlu gorunebilir","Tekli yada Ciftli olabilir"]
+  }],
+  Direnc : ["Vankomisin"],
+  Duyarlilik: "Kolistin",
+  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  Aciklama : ["Karbon kaynagi olarak sadece Sitrat kullanabilir","Normal Floarada Bulunur",
+  "Azot Dongusunde Onemli","Vucut direnci dusuk kisilerde ve premature bebeklerde enfeksiyon",
+  "En onemli Citrobacter","Burda Yeterince Bilgi Henuz Yok"],
 });
 
 
 
-
-/*
-for (var i = 0; i < 1000; i++) {
-  let B = JSON.parse(JSON.stringify(Bakteriler[0]));
-  B.TurAdi += i;
-  Bakteriler.push(B);
-}
-*/
 
 
 
@@ -285,7 +339,22 @@ Bakteriler.sort((a, b) => {
   let b1 = b.CinsAdi.toLowerCase();
   if(a1 < b1) return -1;
   if(a1 > b1) return 1;
-  return 0;
+  if(a1 == b1) {
+    if(typeof a.SubTur !== "undefined") {
+      if(typeof b.SubTur !== "undefined") {
+        return 0;
+      } else {
+        return -1;
+      }
+    }
+    if(typeof b.SubTur !== "undefined") {
+      if(typeof a.SubTur !== "undefined") {
+        return 0;
+      } else {
+        return 1;
+      }
+    }
+  }
 });
 
 
