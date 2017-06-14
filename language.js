@@ -6,6 +6,7 @@ let IndexFieldFilterObj = {
   ["Aciklama"] : false,
   ["Resim"] : false,
   ["TurAdi"] : false,
+  ["SubTur"] : false,
   
 };
 let IndexPathFilterObj = {
