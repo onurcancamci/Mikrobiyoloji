@@ -104,6 +104,18 @@ body {
   margin-bottom: 0px;
   
 }
+.circle {
+    width: 40px;
+    height: 40px;
+    background: #d32f2f;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    position: absolute;
+    top: 45%;
+    left: 55%;
+    display: none;
+}
 #searchBakteri {
   font-size: 40pt;
   height: 66pt;

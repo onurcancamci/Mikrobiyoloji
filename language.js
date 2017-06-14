@@ -166,7 +166,8 @@ let SozlukBuild = function (kelime) {
     SBS += `[\`${kelime}\`] : \`${Dict[kelime]}\`,\n`;
     NDict[kelime] = Dict[kelime];
   } else {
-    let sonuc = prompt(kelime,"#");
+    //let sonuc = prompt(kelime,"#");
+    let sonuc = "#";
     NDict[kelime] = sonuc;
     SBS += `[\`${kelime}\`] : \`${sonuc}\`,\n`;
   }

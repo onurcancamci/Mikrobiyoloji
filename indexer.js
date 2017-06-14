@@ -92,177 +92,23 @@ let BakteriRouter = function (Bakteri) {
 
 
 
-//filter menusundeki html i olusturur
-let IndexResolver = function (obj, alanPrefix = "") {
-  for(let alan in obj) {
-    let alanSocket = AddCategory(alanPrefix + alan);
-    for(let eleman in obj[alan]) {
-      if(eleman == "_Sub") {
-        if(obj[alan][eleman] && Object.keys(obj[alan][eleman]).length > 0) {
-          IndexResolver(obj[alan][eleman], alanPrefix + alan + "-");
-        }
-        continue;
-      }
-      AddEleman(eleman,alanSocket, alanPrefix + alan);
-    }
-  }
-}
-
-
-let Rules = {};
-let FilterRule = function(id, status) {
-  Rules[id] = status;
-  RefreshRules();
-}
-let ReachArray = function (path, eleman) {
-  let obj = TheIndex;
-  for(let k = 0; k < path.length; k++) {
-    obj = obj[path[k]];
-    if(k != path.length - 1) {
-      obj = obj["_Sub"];
-    }
-  }
-  return obj[eleman];
-}
-let RefreshRules = function () {
-  for(let B of Bakteriler) {
-    let html = document.querySelector(`#${B._HTML}`);
-    let needTest = true;
-    let failTest = false;
-    for(let id in Rules) {
-      if(Rules[id] == 0) {
-        continue;
-      } else if(Rules[id] == 1) {
-        let path = StringRemoveLast(id);
-        path = path.split("-");
-        let eleman = id.split("-").last();
-        let bs = ReachArray(path,eleman);
-        if(bs.findIndex(e => e == B) == -1) {
-          needTest = false;
-        }
-        
-      } else {
-        let path = StringRemoveLast(id);
-        path = path.split("-");
-        let eleman = id.split("-").last();
-        let bs = ReachArray(path,eleman);
-        if(bs.findIndex(e => e == B) != -1) {
-          failTest = true;
-        }
-      }
-    }
-    let result = needTest && !failTest;
-    //console.log(B.DiffName,result);
-    //console.log(html);
-    if(result) {
-      html.className = `card-panel aile-bakteri blue-grey darken-1`;
-    } else {
-      html.className = `card-panel aile-bakteri blue-grey lighten-3`;
-    }
-  }
-  
-}
 
 
 
 
 
 
-for(let B of Bakteriler) {
-  BakteriRouter(B);
-  AddBacteriaToDisplay(B);//sadece isimler ve aileler
-}
-IndexResolver(TheIndex);
-
-
-let TextCardClickEkle = function (obj, text) {
-  if(typeof Genelleme[text] != "undefined") {
-    //console.log(text);
-    obj.onclick = function () {
-      let sp = document.querySelector("#smallPanel");
-      if(sp.style.display == "block") {
-        return;
-      }
-      document.querySelector("#leftPanel").style.filter = "brightness(20%)";
-      let genelleme = Genelleme[text];
-      let infoCard = GetInfoCard();
-      if(Array.isArray(genelleme)) {
-        let nsocket = GetInfoField(Sozluk("Genelleme") + ": ");
-        infoCard.appendChild(nsocket);
-        
-        for(g of genelleme) {
-          nsocket.appendChild(GetTextCard(Sozluk(g)));
-        }
-        
-      } else {
-        for(let f in genelleme) {
-          let nsocket = GetInfoField(Sozluk(f) + ": ");
-          infoCard.appendChild(nsocket);
-          
-          for(g of genelleme[f]) {
-            nsocket.appendChild(GetTextCard(Sozluk(g)));
-          }
-        }
-      }
-      sp.appendChild(infoCard);
-      sp.style.display = "block";
-    }
-  }
-}
-let CloseSmallPanel = function () {
-  let sp = document.querySelector("#smallPanel");
-  document.querySelector("#leftPanel").style.filter = "brightness(100%)";
-  sp.style.display = "none";
-  sp.innerHTML = "";
-}
-//infocard olusturup left panel display html i olustur
-let UnWrapField = function (val, socket) {
-  if(typeof val == "string") {
-    let textcard = GetTextCard(Sozluk(val));
-    socket.appendChild(textcard);
-    TextCardClickEkle(textcard, val);
-    
-  } else if(Array.isArray(val)) {
-    for(let v of val) {
-      UnWrapField(v, socket);
-    }
-  } else if(typeof val == "object" && typeof val["Name"] !== "undefined") {
-    let infoCard = GetInfoCard();
-    socket.appendChild(infoCard);
-    infoCard.appendChild(GetInfoField(Sozluk(val.Name)));
-    
-    for(let f in val) {
-      if(f == "Name") continue;
-      
-      let nsocket = GetInfoField(Sozluk(f) + ": ");
-      infoCard.appendChild(nsocket);
-      UnWrapField(val[f], nsocket);
-      
-    }
-    
-  }
-}
-//premake left panel contents
-for(let B of Bakteriler) {
-  let content = document.createElement("div");
-  content.className = "bakteri-content";
-  for(field in B) {
-    if(field[0] == "_") {
-      continue;
-    }
-    let fieldInfoCard = GetInfoCard();
-    let socket = GetInfoField(Sozluk(field) + ": ");
-    UnWrapField(B[field], socket);
-    fieldInfoCard.appendChild(socket);
-    content.appendChild(fieldInfoCard);
-  }
-  document.querySelector("#invisiblePanel").appendChild(content);
-  B._content = content;
-}
 
 
 
-//document.querySelector(`#${Bakteriler[0]._HTML}`).parentElement.style.display = "block";
+
+
+
+
+
+
+
+//onurcan.querySelector(`#${Bakteriler[0]._HTML}`).parentElement.style.display = "block";
 
 let StringIngAlfabe = function (text) {
   let ntext = "";
@@ -324,11 +170,9 @@ let BakteriRouterSearch = function (Bakteri) {
   }
 }
 
-for(let B of Bakteriler) {
-  BakteriRouterSearch(B);
-}
 
-/*
+
+
 let ObjectEkleSozluk = function (Val, Bakteri, Field) {
   StringEkleSozluk(Val.Name, Bakteri, Field);
   
@@ -368,35 +212,34 @@ let BakteriRouterSozluk = function (Bakteri) {
   }
 }
 
-for(let B of Bakteriler) {
-  BakteriRouterSozluk(B);
-}
-for(g in Genelleme) {
-  if(Array.isArray(Genelleme[g])) {
-    for(m of Genelleme[g]) {
-      SozlukBuild(m);
-    }
-  } else {
-    for(m in Genelleme[g]) {
-      for(mm of Genelleme[g][m]) {
-        SozlukBuild(mm);
+let SozlukBuilderStart = function () {
+  for(let B of Bakteriler) {
+    BakteriRouterSozluk(B);
+  }
+  for(g in Genelleme) {
+    if(Array.isArray(Genelleme[g])) {
+      for(m of Genelleme[g]) {
+        SozlukBuild(m);
+      }
+    } else {
+      for(m in Genelleme[g]) {
+        for(mm of Genelleme[g][m]) {
+          SozlukBuild(mm);
+        }
       }
     }
   }
-}
-SBS += "}";
-console.log(SBS);
-let TSBS = SBS;
-while (TSBS == SBS) {
-  TSBS = prompt("SBS", SBS);
+  SBS += "}";
+  console.log(SBS);
+  prompt("SBS", SBS);
 }
 
 
-*/
 
 
 
-//console.log(TheIndex);
+
+
 
 
 
