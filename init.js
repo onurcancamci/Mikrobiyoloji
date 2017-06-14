@@ -17,7 +17,7 @@ if(HaveNotification) {
   document.querySelector("#notificationCircle").style.display = "block";
 }
 
-
+//asd
 //SozlukBuilderStart();
 
 
