@@ -58,11 +58,19 @@ let ObjClickEkle = function (obj, text) {
         
       } else {
         for(let f in genelleme) {
+          if(f[0] == "_") continue;
           let nsocket = GetInfoField(Sozluk(f) + ": ");
           infoCard.appendChild(nsocket);
           
           for(g of genelleme[f]) {
             nsocket.appendChild(GetTextCard(Sozluk(g)));
+          }
+        }
+        if(typeof genelleme._images !== "undefined") {
+          let imageCont = GetImageContainer();
+          infoCard.appendChild(imageCont);
+          for(let i of genelleme._images) {
+            imageCont.appendChild(GetImage(i));
           }
         }
       }
@@ -71,7 +79,29 @@ let ObjClickEkle = function (obj, text) {
     }
   }
 }
-
+let ObjResimEkle = function (obj, path) {
+  obj.onclick = function () {
+    let sp = onurcan.querySelector("#smallPanel");
+    if(sp.style.display == "block") {
+      return;
+    }
+    onurcan.querySelector("#leftPanel").style.filter = "brightness(20%)";
+    let infoCard = GetInfoCard();
+    
+    let paths = path.split("$");
+    let imgCont = GetImageContainer();
+    infoCard.appendChild(imgCont);
+    for(p of paths) {
+      imgCont.appendChild(GetImage(p));
+    }
+    
+    
+    
+    sp.appendChild(infoCard);
+    sp.style.top = "5%";
+    sp.style.display = "block";
+  }
+}
 
 let queryIndex = {};
 let onurcan = {};

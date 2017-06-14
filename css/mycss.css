@@ -104,6 +104,12 @@ body {
   margin-bottom: 0px;
   
 }
+.image-container {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 90vh;
+  -webkit-overflow-scrolling: touch;
+}
 .circle {
     width: 40px;
     height: 40px;
@@ -123,9 +129,9 @@ body {
 
 #smallPanel {
   position: fixed;
-  top: 30%;
-  width: 60%;
-  left: 20%;
+  top: 15%;
+  width: 90%;
+  left: 5%;
   z-index: 100;
   display: none;
 }

@@ -4,14 +4,25 @@ let CloseSmallPanel = function () {
   let sp = onurcan.querySelector("#smallPanel");
   onurcan.querySelector("#leftPanel").style.filter = "brightness(100%)";
   sp.style.display = "none";
+  sp.style.top = "15%";
   sp.innerHTML = "";
 }
 //infocard olusturup left panel display html i olustur
 let UnWrapField = function (val, socket) {
   if(typeof val == "string") {
-    let textcard = GetTextCard(Sozluk(val));
-    socket.appendChild(textcard);
-    ObjClickEkle(textcard, val);
+    if(val.split("@").length > 1) {
+      if(val.split("@")[0] == "image") {
+        //image@img1.png$img2.png
+        let textcard = GetTextCard(Sozluk(val.split("@")[1]));
+        socket.appendChild(textcard);
+        ObjResimEkle(textcard, val.split("@")[2]);
+      }
+    } else {
+      let textcard = GetTextCard(Sozluk(val));
+      socket.appendChild(textcard);
+      ObjClickEkle(textcard, val);
+    }
+    
     
   } else if(Array.isArray(val)) {
     for(let v of val) {
@@ -319,7 +330,18 @@ let GetSpan = function (text, color = "blue-grey") {
   span.className = `${color}-text text-darken-3`;
   return span;
 }
-
+let GetImageContainer = function () {
+  let div = document.createElement("div");
+  div.className = "image-container";
+  return div;
+}
+let GetImage = function (path) {
+  let img = new Image();
+  img.src = path;
+  img.style.width = "100%";
+  img.style.marginBottom = "30px";
+  return img;
+}
 
 
 if(HaveNotification) {

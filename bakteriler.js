@@ -51,7 +51,7 @@ Bakteriler.push({
     "Streptomisin", "Gentamisin", "Tetrasiklin",
     "Doksisiklin", "Siprofloksasin", "Kloramfenikol"
   ],
-  Tedavi : "Antibiyotik"
+  
 });
 
 
@@ -126,7 +126,7 @@ Bakteriler.push({
   }, {
     Name: "Menenjit"
   }],
-  
+  Resim : "image@Agarda@images/Klebsiella_Pneumoniae_01.png",
   
 });
 

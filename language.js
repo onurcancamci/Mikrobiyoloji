@@ -34,6 +34,7 @@ let IndexFieldFilter = function (field, path) {
 
 let Dil = {
   Turkce : { 
+    [`image`] : `Resim`,
     [`FamilyName`] : `Aile`,
     [`Yersinia`] : `#`,
     [`DiffName`] : `İsim`,
