@@ -18,16 +18,21 @@ Hareket
 Yazmak yerine bos birak: 
 Kapsulsuz
 */
+//°C
 
+let Aciklamali = function (Name, Aciklama) {
+  return {Name,Aciklama};
+}
 
 
 
 
 //Yersinia
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi : "Yersinia",
   TurAdi : "Pestis",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram : "Negative",
   Shape : "Kokobasil",
   Hareket: "Hareketsiz",
@@ -60,9 +65,10 @@ Bakteriler.push({
   
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi : "Yersinia",
   TurAdi : "Enterocolitica",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram : "Negative",
   Shape : "Basil",
   Solunum : "Aerob_Ve_Fakultatif_Anaerob",
@@ -88,10 +94,11 @@ Bakteriler.push({
 
 //Klebsiella
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
   TurAdi: "Pneumoniae",
   SubTur: "pneumoniae",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -134,10 +141,11 @@ Bakteriler.push({
   
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
   TurAdi: "Pneumoniae",
   SubTur: "ozaenae",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
@@ -155,9 +163,10 @@ Bakteriler.push({
   Resim: "image@Agarda@images/klebsiella_ozaenae/agar.jpg",
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
   TurAdi: "Granulomatis",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Kapsul: "Kapsullu",
@@ -169,9 +178,10 @@ Bakteriler.push({
   Aciklama : ["Cinsel Yolla Bulasir","Burda Yeterince Bilgi Henuz Yok"],
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
   TurAdi: "Variicola",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
@@ -188,9 +198,10 @@ Bakteriler.push({
   Aciklama : "Burda Yeterince Bilgi Henuz Yok",
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
   TurAdi: "Oxytoca",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -211,9 +222,10 @@ Bakteriler.push({
 
 //Enterobacter
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Enterobacter",
   TurAdi: "Aerogenes",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -229,9 +241,10 @@ Bakteriler.push({
   Aciklama : ["Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Enterobacter",
   TurAdi: "Cloacae",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -249,9 +262,10 @@ Bakteriler.push({
 
 //Serratia
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Serratia",
   TurAdi: "Marcescens",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Fakultatif_Anaerob",
@@ -266,9 +280,10 @@ Bakteriler.push({
   Aciklama : [{Name:"Kirmizi Pigment", Aciklama: ["Tum suslari uretmeyebilir","Pembe Pigment uretebilir"]},"Burda Yeterince Bilgi Henuz Yok","Bazi Turlerin Kapsulu olabilir"],
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Serratia",
   TurAdi: "Rubidaea",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Fakultatif_Anaerob",
@@ -285,9 +300,10 @@ Bakteriler.push({
 
 //Citrobacter
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Citrobacter",
   TurAdi: "Koseri",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
@@ -304,9 +320,10 @@ Bakteriler.push({
   Aciklama : ["Karbon kaynagi olarak sadece Sitrat kullanabilir","Normal Florada Bulunur?","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok"],
 });
 Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
   CinsAdi: "Citrobacter",
   TurAdi: "Freundii",
-  AileAdi: "Enterobacteriaceae",
+  
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
@@ -325,32 +342,69 @@ Bakteriler.push({
   "En onemli Citrobacter","Burda Yeterince Bilgi Henuz Yok"],
 });
 
-/*
+
 //Rickettsia
 Bakteriler.push({
-  CinsAdi: "",
-  TurAdi: "",
-  AileAdi: "",
-  Gram: "",
-  Shape:  "",
-  Solunum: "",
-  Enzimler: [],
-  Hareket: "",
-  KulturOrtami: [{
-    Name: "",
-    Gorunus: [],
-    Aciklama: []
-  }],
-  Direnc : [],
-  Duyarlilik: [],
-  VirualanFaktorler: [],
-  Aciklama : [],
+  AileAdi: "Rickettsiaceae",
+  CinsAdi: "Rickettsia",
+  TurAdi: "Prowazekii",
+  Gram: "Negative",
+  Shape:  {Name: "Basil", Aciklama: ["Pleomorfik","Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  Duyarlilik: ["Kloramfenikol","Tetrasiklin"],
+  Bulasma: ["Artropodlar"],
+  Vektor: {Name:"Insan Vucut Bitleri", Kaynak:"Insan"},
+  Hastaliklar: [{Name:"Epidemik Tifus",
+                Aciklama: ["Diger isimleri: Klasik Tifus, Bit Tifusu, Lekeli Humma","Letalite 40% i bulabilir","Kulucka 1 hafta"],
+                Belirtiler: [{Name:"Bas Agrisi", Aciklama:"Ani Baslar"}, 
+                              {Name:"Ates", Aciklama: "Hizla 40°C a cikar ve dusmez"},
+                              {Name:"Dokuntu",Aciklama:["5. Gunde Aksiller bolge ve Govdenin ust kisminda","El ayasi, Ayak tabani ve Yuz haric tum vucutta","Basinca Kaybolmaz"]}]}, 
+                {Name:"Brill-Zinsser Hastaligi",Aciklama:"Onceden R. prowazekii infeksiyonu gecirmis kisilerde yillar sonra gelisen, hafif epidemik tifus bulgulu hastalik"}],
+  
+  Aciklama : ["Tifus Grubu","Zorunlu Hucre Ici Parazit","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
+                "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar",
+                "Weil-Felix genellikle Negatiftir", 
+                 {Name:"Asi var", Aciklama:"Sadece Risk Gruplarina"}],
+  
+});
+
+Bakteriler.push({
+  AileAdi: "Rickettsiaceae",
+  CinsAdi: "Rickettsia",
+  TurAdi: "Typhi",
+  Gram: "Negative",
+  Shape:  {Name: "Basil", Aciklama: ["Pleomorfik","Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  Duyarlilik: ["Kloramfenikol","Tetrasiklin"],
+  Bulasma: ["Artropodlar"],
+  Vektor: {Name:"Pire", Kaynak:"Sican"},
+  Hastaliklar: {Name:"Murine Typhus",Aciklama:"Belirtileri Epidemik Tifuse Benzer Ama Dokuntu El Ayasi, Ayak Tabani ve Yuzde de Gorulur"},
+  Aciklama : ["Tifus Grubu","Zorunlu Hucre Ici Parazit","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
+                "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar"],
+});
+Bakteriler.push({
+  AileAdi: "Rickettsiaceae",
+  CinsAdi: "Rickettsia",
+  TurAdi: "Rickettsii",
+  Gram: "Negative",
+  Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  Duyarlilik: ["Doksisiklin","Kinolonlar"],
+  Bulasma: ["Artropodlar"],
+  Vektor: {Name:"Kene", Kaynak:["Infekte Kemirgenler","Keneler"]},
+  Hastaliklar: {Name:"Kayalik Daglar Benekli Atesi",
+                Belirtiler: ["Ates","Titreme","Eklem Agrisi","Kas Agiris","Gucsuzluk","Dokuntuler",
+                                Aciklamali("Bas Agrisi","Siddetli"),Aciklamali("Lenfadenopati","Bolgesel"),
+                                Aciklamali("Nebde Dokusu",["Isirik Bolgesinde","Siyah Benek-Tache Noir"])],
+                Aciklama:"Infeksiyon Cesitli Organlari Tutabilir, Bu Sebeple Farkli Bulgular Yapabilir"},
+  Aciklama : ["Benekli Ates Grubu","Zorunlu Hucre Ici Parazit","En Patojenik Rickettsia Turu","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
+                "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar"],
 });
 
 
-*\
-
-
 
 
 
@@ -363,9 +417,9 @@ Bakteriler.push({
 
 /*
 Bakteriler.push({
+  AileAdi: "",
   CinsAdi: "",
   TurAdi: "",
-  AileAdi: "",
   Gram: "",
   Shape:  "",
   Solunum: "",

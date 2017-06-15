@@ -86,7 +86,7 @@ let IndexResolver = function (obj, alanPrefix = "") {
 }
 
 
-//filter menusu icin
+//filter menusu bottom panel icin
 let AllFilterElemans = [];
 let binct = 0;
 let AddCategory = function (name) {
@@ -104,8 +104,10 @@ let AddCategory = function (name) {
   categoryDiv.appendChild(fec);
   if(binct == 0) {
     document.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
+    document.querySelector("#filterCategoryIndex1").innerText += "/" + nname;
   } else {
     document.querySelector("#filterCategoryContainer2").appendChild(categoryDiv);
+    document.querySelector("#filterCategoryIndex2").innerText += "/" + nname;
   }
   
   binct = (binct + 1) % 2;
@@ -304,9 +306,11 @@ let ToggleBacteria = function(id,btn) {
 let RightMenuActive = false;
 let ToggleRightMenu = function () {
   let rm = onurcan.querySelector("#rightPanel");
+  //3let rb = onurcan.querySelector("#rightPanelBack");
   if(!RightMenuActive) {
     rm.style.display = "block";
     document.querySelector("#notificationCircle").style.display = "none";
+    //rb.className = "fa fa-2x fa-chevron-right white-text";
     setTimeout(function () {
       rm.style.transform = "translateX(-100%)";
       rm.style.webkitTransform = "translateX(-100%)";
@@ -314,8 +318,10 @@ let ToggleRightMenu = function () {
   } else {
     rm.style.transform = "translateX(0)";
     rm.style.webkitTransform = "translateX(0)";
+    //rb.className = "fa fa-2x fa-rotate-180 fa-chevron-right white-text";
     setTimeout(function () {
       rm.style.display = "none";
+      //rb.className = "fa fa-2x fa-chevron-right white-text";
     }, 200);
   }
   RightMenuActive = !RightMenuActive;

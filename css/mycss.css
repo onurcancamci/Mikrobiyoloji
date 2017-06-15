@@ -87,12 +87,16 @@ body {
 }
 .filterCategoryContainer {
   width: 100%;
-  height: 47.5%;
+  height: 42%;/*47.5*/
   padding-top: 20px;
   overflow-y: hidden;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
   display: -webkit-inline-box;
+}
+.filterCategoryIndex {
+  margin-top: 20px;
+  font-size: 20pt;
 }
 .filterElemanContainer {
   height: 90%;
@@ -149,6 +153,7 @@ body {
   -webkit-transition: all 0.2s linear;
   margin: 0;
   overflow: hidden;
+  padding-top: 0px;
   will-change: top;
   /*display: none;*/
   
