@@ -86,10 +86,6 @@ Bakteriler.push({
   
 });
 
-
-
-
-
 //Klebsiella
 Bakteriler.push({
   CinsAdi: "Klebsiella",
@@ -329,10 +325,64 @@ Bakteriler.push({
   "En onemli Citrobacter","Burda Yeterince Bilgi Henuz Yok"],
 });
 
+//Rickettsia
+Bakteriler.push({
+  CinsAdi: "",
+  TurAdi: "",
+  AileAdi: "",
+  Gram: "",
+  Shape:  "",
+  Solunum: "",
+  Enzimler: [],
+  Hareket: "",
+  KulturOrtami: [{
+    Name: "",
+    Gorunus: [],
+    Aciklama: []
+  }],
+  Direnc : [],
+  Duyarlilik: [],
+  VirualanFaktorler: [],
+  Aciklama : [],
+});
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+/*
+Bakteriler.push({
+  CinsAdi: "",
+  TurAdi: "",
+  AileAdi: "",
+  Gram: "",
+  Shape:  "",
+  Solunum: "",
+  Enzimler: [],
+  Hareket: "",
+  KulturOrtami: [{
+    Name: "",
+    Gorunus: [],
+    Aciklama: []
+  }],
+  Direnc : [],
+  Duyarlilik: [],
+  VirualanFaktorler: [],
+  Aciklama : [],
+});
+
+
+*/
 /*
 Bakteriler.sort((a, b) => {
   let a1 = a.CinsAdi.toLowerCase();
