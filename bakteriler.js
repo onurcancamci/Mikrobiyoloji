@@ -325,6 +325,7 @@ Bakteriler.push({
   "En onemli Citrobacter","Burda Yeterince Bilgi Henuz Yok"],
 });
 
+/*
 //Rickettsia
 Bakteriler.push({
   CinsAdi: "",
@@ -347,7 +348,7 @@ Bakteriler.push({
 });
 
 
-
+*\
 
 
 
