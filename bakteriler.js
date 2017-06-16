@@ -102,7 +102,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Laktoz","Ureaz","Sitrat","VP?","Katalaz"],
+  Enzimler: ["Laktoz","Ureaz","Sitrat","VP","Sakkaroz","Mannitol","Katalaz"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   KulturOrtami: [{
@@ -149,7 +149,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
-  Enzimler: ["Katalaz"],
+  Enzimler: ["Katalaz","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   Antijenler: ["O", "K"],
@@ -170,6 +170,7 @@ Bakteriler.push({
   
   Gram: "Negative",
   Shape:  "Basil",
+  Enzimler: ["Sakkaroz","Mannitol"],
   Kapsul: "Kapsullu",
   Hareket: "Hareketsiz",
   Antijenler: ["O", "K"],
@@ -187,7 +188,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktoz","Ureaz"],
+  Enzimler: ["Katalaz","Laktoz","Ureaz","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   Antijenler: ["O","K"],
@@ -208,7 +209,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktoz","Ureaz","Tryptophanase"],
+  Enzimler: ["Katalaz","Laktoz","Ureaz","Indol","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   Antijenler: ["O", "K"],
@@ -315,7 +316,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktoz","Tryptophanase"],
+  Enzimler: ["Katalaz","Laktoz","Indol"],
   Hareket: "Hareketli",
   Antijenler: ["H" , "O"],
   KulturOrtami: [{
@@ -525,8 +526,98 @@ Bakteriler.push({
 //Ehrlichia Anaplasma Neorickettsia ekle
 
 
+//Escherichia
+Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
+  CinsAdi: "Escherichia",
+  TurAdi: "coli",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Indol","Katalaz","Mannitol","Hemolizin",Aciklamali("Laktoz","Salmonella Ve Shigella dan ayirir"),Aciklamali("Sakkaroz","Bazen")],
+  Hareket: ["Hareketli","Hareketsiz"],
+  Antijenler: ["O","K","H","P"],
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: ["S tipi"],
+    Aciklama: ["Kapsullu olanlar M tipi"]
+  }],
+  Direnc : "Vankomisin",
+  Duyarlilik: "Kolistin",
+  VirualanFaktorler: ["Endotoksin",{Name: "Flagella", Aciklama: "Peritrichous"}],
+  Hastaliklar: [{
+    Name: "Idrar Yolu Enfeksiyonu",
+  }, {
+    Name: "Barsak Enfeksiyonlari",
+  }, {
+    Name: "Septisemi",
+  }, {
+    Name: "Menenjit",
+  }, {
+    Name: "Pnomoni",
+  }],
+  Aciklama : ["Normal Florada Bulunur","Nitrat Reduksiyonu Yapar","Bazi suslari kapsullu olabilir"],
+});
 
 
+//Proteus
+Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
+  CinsAdi: "Proteus",
+  TurAdi: "mirabilis",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Ureaz","H2S","Fenilalanin Deaminaz", "Hemolizin"],
+  Hareket: "Hareketli",
+  Antijenler: ["O","H"],
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Kolay Urer"
+  }],
+  Direnc : ["Vankomisin","Kolistin"],
+  VirualanFaktorler: [{Name: "Flagella", Aciklama: "Peritrichous"}],
+  Aciklama : ["Normal Florada Bulunur"],
+});
+Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
+  CinsAdi: "Proteus",
+  TurAdi: "vulgaris",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Ureaz","H2S","Fenilalanin Deaminaz","Indol", "Hemolizin"],
+  Hareket: "Hareketli",
+  Antijenler: ["O","H"],
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Aciklama: "Kolay Urer"
+  }],
+  Direnc : ["Vankomisin","Kolistin"],
+  VirualanFaktorler: [{Name: "Flagella", Aciklama: "Peritrichous"}],
+  Aciklama : ["Normal Florada Bulunur"],
+});
+
+//Morganella
+Bakteriler.push({
+  AileAdi: "Enterobacteriaceae",
+  CinsAdi: "Morganella",
+  TurAdi: "morganii",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Fenilalanin Deaminaz","Indol","Ureaz","Beta Hemoliz"],
+  Hareket: "Hareketli",
+  Antijenler: ["O","H"],
+  KulturOrtami: [{
+    Name: "MacConkey",
+  }],
+  Direnc : ["Vankomisin","Kolistin"],
+  VirualanFaktorler: [{Name: "Flagella", Aciklama: "Peritrichous"}],
+  //Aciklama : [],
+});
+
+//Providencia Ekle
 
 
 
