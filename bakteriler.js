@@ -493,7 +493,7 @@ Bakteriler.push({
     Belirtiler: "Lezyon",
     Aciklama: ["Ozellikle Immunyetmezlikli Hastalarda Gorulur","Ic Organlarda da Gorulebilir","Lezyonlar Papul, Nodul, Tumoral Olusum Sirasini izler"]
   }],
-  Vektor: "Insan Vucut Biti"
+  Vektor: "Insan Vucut Biti",
   VirualanFaktorler: [Aciklamali("Flagella","Unipolar")],
   Aciklama : ["Zorunlu Hucre Ici Degildir","Dunya Geneli Yaygindir"],
 });
