@@ -620,7 +620,46 @@ Bakteriler.push({
 //Providencia Ekle
 
 
+//Corynebacterium
+Bakteriler.push({
+  AileAdi: "Corynebacteriaceae",
+  CinsAdi: "Corynebacterium",
+  TurAdi: "diphtheria",
+  Gram: "Positive",
+  Shape:  "Basil",
+  Solunum: "Aerob",
+  Enzimler: ["Katalaz","Beta Hemoliz"],
+  Hareket: "Hareketsiz",
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    //Aciklama: []
+  }, {
+    Name: "Loeffler besiyeri",
+    Aciklama: ["C. diphtheria icin secicidir","Tellurit Icerir"],
+  }],
+  Duyarlilik: ["Vankomisin"],
+  Aciklama : ["Biyotipleri Alfa Hemoliz veya Beta Hemoliz Yapabilir","Bogaz Dokusunda Kolonize Olur","Invaze Olmaz","Dolasima Gecmez","Elek Testi","Toksin Sentezi ve Salgisi Icin Lizojenik Beta Fajina Sahip Olmasi Gerekir"],
+});
 
+//Listeria
+Bakteriler.push({
+  AileAdi: "Listeriaceae",
+  CinsAdi: "Listeria",
+  TurAdi: "monocytogenes",
+  Gram: "Positive",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","CAMP","Eskulin Hidroliz","Beta Hemoliz"],
+  Hareket: [Aciklamali("Hareketli","22-28°C"),Aciklamali("Hareketsiz","37°C")],
+  Antijenler: ["O","H"],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    Aciklama: ["Beta Hemoliz"]
+  }],
+  Duyarlilik: ["Vankomisin","Penisilin"],
+  Bulasma: ["Kontamine Peynir Sebze","Transplasental","Dogum"],
+  Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
+});
 
 
 /*
@@ -633,6 +672,7 @@ Bakteriler.push({
   Solunum: "",
   Enzimler: [],
   Hareket: "",
+  Antijenler: [],
   KulturOrtami: [{
     Name: "",
     Gorunus: [],
