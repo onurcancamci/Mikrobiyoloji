@@ -31,7 +31,7 @@ let Aciklamali = function (Name, Aciklama) {
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi : "Yersinia",
-  TurAdi : "Pestis",
+  TurAdi : "pestis",
   
   Gram : "Negative",
   Shape : "Kokobasil",
@@ -67,7 +67,7 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi : "Yersinia",
-  TurAdi : "Enterocolitica",
+  TurAdi : "enterocolitica",
   
   Gram : "Negative",
   Shape : "Basil",
@@ -96,13 +96,13 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
-  TurAdi: "Pneumoniae",
+  TurAdi: "pneumoniae",
   SubTur: "pneumoniae",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Laktaz","Ureaz","Sitrat","VP?","Katalaz"],
+  Enzimler: ["Laktoz","Ureaz","Sitrat","VP?","Katalaz"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
   KulturOrtami: [{
@@ -143,7 +143,7 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
-  TurAdi: "Pneumoniae",
+  TurAdi: "pneumoniae",
   SubTur: "ozaenae",
   
   Gram: "Negative",
@@ -152,6 +152,7 @@ Bakteriler.push({
   Enzimler: ["Katalaz"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
+  Antijenler: ["O", "K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: "Mukoid",
@@ -165,12 +166,13 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
-  TurAdi: "Granulomatis",
+  TurAdi: "granulomatis",
   
   Gram: "Negative",
   Shape:  "Basil",
   Kapsul: "Kapsullu",
   Hareket: "Hareketsiz",
+  Antijenler: ["O", "K"],
   KulturOrtami: [{
     Name: "Monosit Kultur Sistemi",
     Aciklama: ["Hucresiz Ortamda Uretilemez"],
@@ -180,14 +182,15 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
-  TurAdi: "Variicola",
+  TurAdi: "variicola",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Ureaz"],
+  Enzimler: ["Katalaz","Laktoz","Ureaz"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
+  Antijenler: ["O","K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: "Mukoid",
@@ -200,14 +203,15 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Klebsiella",
-  TurAdi: "Oxytoca",
+  TurAdi: "oxytoca",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Ureaz","Tryptophanase"],
+  Enzimler: ["Katalaz","Laktoz","Ureaz","Tryptophanase"],
   Hareket: "Hareketsiz",
   Kapsul: "Kapsullu",
+  Antijenler: ["O", "K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: "Mukoid",
@@ -224,13 +228,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Enterobacter",
-  TurAdi: "Aerogenes",
+  TurAdi: "aerogenes",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Ornitin Dekarboksilaz"],
+  Enzimler: ["Katalaz","Laktoz","Ornitin Dekarboksilaz"],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Aciklama: "Laktoz Fermente Eder"
@@ -243,13 +248,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Enterobacter",
-  TurAdi: "Cloacae",
+  TurAdi: "cloacae",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Ornitin Dekarboksilaz",{Name: "Ureaz", Aciklama:"65%"}],
+  Enzimler: ["Katalaz","Laktoz","Ornitin Dekarboksilaz",{Name: "Ureaz", Aciklama:"65%"}],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Aciklama: "Laktoz Fermente Eder"
@@ -264,13 +270,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Serratia",
-  TurAdi: "Marcescens",
+  TurAdi: "marcescens",
   
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Fakultatif_Anaerob",
   Enzimler: ["Katalaz","Dnaz","Lipaz","Gelatinaz"],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Aciklama: "Laktoz Fermente Etmez"
@@ -282,13 +289,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Serratia",
-  TurAdi: "Rubidaea",
+  TurAdi: "rubidaea",
   
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Dnaz","Lipaz","Gelatinaz"],
+  Enzimler: ["Katalaz","Laktoz","Dnaz","Lipaz","Gelatinaz"],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Aciklama: "Laktoz Fermente Eder"
@@ -302,13 +310,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Citrobacter",
-  TurAdi: "Koseri",
+  TurAdi: "koseri",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz","Tryptophanase"],
+  Enzimler: ["Katalaz","Laktoz","Tryptophanase"],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: ["Mukoid","Puturlu"],
@@ -322,13 +331,14 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Enterobacteriaceae",
   CinsAdi: "Citrobacter",
-  TurAdi: "Freundii",
+  TurAdi: "freundii",
   
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Laktaz"],
+  Enzimler: ["Katalaz","Laktoz"],
   Hareket: "Hareketli",
+  Antijenler: ["H" , "O"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: ["Mukoid","Puturlu"],
@@ -347,7 +357,7 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Rickettsiaceae",
   CinsAdi: "Rickettsia",
-  TurAdi: "Prowazekii",
+  TurAdi: "prowazekii",
   Gram: "Negative",
   Shape:  {Name: "Basil", Aciklama: ["Pleomorfik","Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
   Solunum: "Aerob",
@@ -368,11 +378,10 @@ Bakteriler.push({
                  {Name:"Asi var", Aciklama:"Sadece Risk Gruplarina"}],
   
 });
-
 Bakteriler.push({
   AileAdi: "Rickettsiaceae",
   CinsAdi: "Rickettsia",
-  TurAdi: "Typhi",
+  TurAdi: "typhi",
   Gram: "Negative",
   Shape:  {Name: "Basil", Aciklama: ["Pleomorfik","Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
   Solunum: "Aerob",
@@ -387,7 +396,7 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Rickettsiaceae",
   CinsAdi: "Rickettsia",
-  TurAdi: "Rickettsii",
+  TurAdi: "rickettsii",
   Gram: "Negative",
   Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
   Solunum: "Aerob",
@@ -403,9 +412,117 @@ Bakteriler.push({
   Aciklama : ["Benekli Ates Grubu","Zorunlu Hucre Ici Parazit","En Patojenik Rickettsia Turu","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
                 "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar"],
 });
+Bakteriler.push({
+  AileAdi: "Rickettsiaceae",
+  CinsAdi: "Rickettsia",
+  TurAdi: "akari",
+  Gram: "Negative",
+  Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  Duyarlilik: ["Doksisiklin","Kinolonlar"],
+  Bulasma: ["Artropodlar"],
+  Vektor: {Name:"Akarlar", Kaynak:["Infekte Kemirgenler"]},
+  Hastaliklar: {Name:"Rickettsia Cicegi",
+                Belirtiler:["Ates","Dokuntuler"],
+                Aciklama:["Infeksiyon Cesitli Organlari Tutabilir, Bu Sebeple Farkli Bulgular Yapabilir","Hafif Gecirilen Bir Hastaliktir"]},
+  Aciklama : ["Benekli Ates Grubu","Zorunlu Hucre Ici Parazit","En Patojenik Rickettsia Turu","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
+                "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar","Weil-Felix Negatiftir"],
+});
+Bakteriler.push({
+  AileAdi: "Rickettsiaceae",
+  CinsAdi: "Rickettsia",
+  TurAdi: "conorii",
+  Gram: "Negative",
+  Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  Duyarlilik: ["Doksisiklin","Kinolonlar"],
+  Bulasma: ["Artropodlar"],
+  Vektor: {Name:"Keneler", Kaynak:["Infekte Kemirgenler",{Name:"Kopekler",Aciklama:"Bazen"}]},
+  Hastaliklar: {Name:"Akdeniz Atesi",
+                Belirtiler: ["Ates","Dokuntuler"],
+                Aciklama:["Selim Bir Hastalik","Endemiktir"]},
+  Aciklama : ["Benekli Ates Grubu","Zorunlu Hucre Ici Parazit","En Patojenik Rickettsia Turu","RNA ve DNA Vardir","Enzim Sistemleri Vardir",
+                "Yasam Sikluslari Memelilerde Ve Artropodlarda","Dis Ortam Kosullarina Duyarlilar","Weil-Felix Negatiftir"],
+});
+
+//coxiella
+Bakteriler.push({
+  AileAdi: "Coxiellaceae",
+  CinsAdi: "Coxiella",
+  TurAdi: "burnetii",
+  Gram: "Negative",
+  Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  KulturOrtami: [{
+    Name: "Axenic Culture"
+  }],
+  Hastaliklar: {
+    Name: "Q Atesi",
+    Belirtiler: ["Ates","Bas Agrisi","Eklem Agrisi","Oksuruk","Dokuntu","Menenjit Bulgulari"],
+    Aciklama: ["Tum Dunyada Yaygin","Insanda Akut Veya Kronik(5%)","Genelde Ciftlik Hayvanlarindan Kaynaklanir",
+                "Cok Bulasici","Lab: Trombositopeni, KC Enzimlerinde Yukselme, Eritrosit Sedimentasyonda Yukselme"],
+                
+  },
+  Bulasma: ["Hava","Damlacik","Oral","Kene"],
+  VirualanFaktorler: "Endospor",
+  Aciklama : ["Zorunlu Hucre Ici","Fagolizozomlarda Yasar","Cevre Sartlarina Cok Direnclidir"],
+});
+
+//Bartonella
+Bakteriler.push({
+  AileAdi: "Bartonellaceae",
+  CinsAdi: "Bartonella",
+  TurAdi: "quintana",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob",
+  Hareket: "Hareketli",
+  KulturOrtami: [{
+    Name: "Axenic Culture"
+  }],
+  Hastaliklar: [{
+    Name: "Siper Atesi",
+    Belirtiler: [Aciklamali("Ates",["5 Gunde Bir Yukselir","Ani Ates"]),Aciklamali("Agri","Post Orbital, Tibia Ustunde ve Uzun Kemiklerde"),
+                  Aciklamali("Dokuntuler","Ozellikle Govdede")],
+    Aciklama: ["2-3 Hafta Kulucka","Olum Bildirilmemistir"]
+  },{
+    Name: "Basiller Anjiyomatosis",
+    Belirtiler: "Lezyon",
+    Aciklama: ["Ozellikle Immunyetmezlikli Hastalarda Gorulur","Ic Organlarda da Gorulebilir","Lezyonlar Papul, Nodul, Tumoral Olusum Sirasini izler"]
+  }],
+  Vektor: "Insan Vucut Biti"
+  VirualanFaktorler: [Aciklamali("Flagella","Unipolar")],
+  Aciklama : ["Zorunlu Hucre Ici Degildir","Dunya Geneli Yaygindir"],
+});
+Bakteriler.push({
+  AileAdi: "Bartonellaceae",
+  CinsAdi: "Bartonella",
+  TurAdi: "quintana",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob",
+  Hareket: Aciklamali("Hareketli","Titreyerek Hareket Ettigine Dair Veri Var"),
+  KulturOrtami: [{
+    Name: "Axenic Culture"
+  }],
+  Hastaliklar: [{
+    Name: "Kedi Tirmigi Hastaligi",
+    Belirtiler: ["Lenfadenopati","Ates"],
+    Aciklama: ["Kedi Tirmalamasiyla Bulasir","Lenfanjit Gorulmez"]
+  },{
+    Name: "Basiller Anjiyomatosis",
+    Belirtiler: "Lezyon",
+    Aciklama: ["Ozellikle Immunyetmezlikli Hastalarda Gorulur","Ic Organlarda da Gorulebilir","Lezyonlar Papul, Nodul, Tumoral Olusum Sirasini izler"]
+  }],
+  Aciklama : ["Zorunlu Hucre Ici Degildir","Dunya Geneli Yaygindir"],
+});
+//B. Baciliformis Ekle
 
 
-
+//Ehrlichia Anaplasma Neorickettsia ekle
 
 
 

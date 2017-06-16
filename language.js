@@ -139,6 +139,9 @@ let Genelleme = {
     Aciklama: ["Kapsul Antijeni"]
   },
   [`Bircok Kultur`]: [`MacConkey Agar`,`Bircok Kultur`],
+  [`Akdeniz Atesi`]: {
+    [`Es Anlamli`]: [`Marsilya Atesi`, `Boutonneuse Fever`]
+  },
 }
 
 
