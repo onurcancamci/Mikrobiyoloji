@@ -501,7 +501,7 @@ Bakteriler.push({
 Bakteriler.push({
   AileAdi: "Bartonellaceae",
   CinsAdi: "Bartonella",
-  TurAdi: "quintana",
+  TurAdi: "henselae",
   Gram: "Negative",
   Shape:  "Basil",
   Solunum: "Aerob",
