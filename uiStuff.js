@@ -51,11 +51,14 @@ let PremakeLeftPanel = function () {
   for(let B of Bakteriler) {
     let content = document.createElement("div");
     content.className = "bakteri-content";
+    if(!ifMobile) {
+      //content.className += " row";
+    }
     for(field in B) {
       if(field[0] == "_") {
         continue;
       }
-      let fieldInfoCard = GetInfoCard();
+      let fieldInfoCard = GetInfoCard(undefined,undefined,false);//ifMobile
       let socket = GetInfoField(Sozluk(field) + ": ");
       UnWrapField(B[field], socket);
       fieldInfoCard.appendChild(socket);
@@ -195,7 +198,7 @@ let AddBacteriaToDisplay = function (B) {
   foundFamily.VisibleCount += 1;
   B._HTML = `${GetBakteriID(B)}`;
   if(typeof B.SubTur !== "undefined") {
-    row.querySelector(`#${B._HTML}`).innerHTML += `<span class="white-text aile-bakteri-text" style="font-size: 20pt;">${B.SubTur}</span>`;
+    row.querySelector(`#${B._HTML}`).innerHTML += `<span class="white-text aile-bakteri-text subtur">${B.SubTur}</span>`;
   }
   foundFamily.Bakteriler.push(B);
   
@@ -259,6 +262,7 @@ let leftPanelActive = false;
 let leftPanelId;
 let leftPanelBtn;
 let leftPanelAnimating = false;
+let leftPanelContent;
 let ToggleBacteria = function(id,btn) {
   if(ifMobile) {//for mobile only
     if(leftPanelAnimating) return;
@@ -279,7 +283,6 @@ let ToggleBacteria = function(id,btn) {
         onurcan.querySelector("#leftPanelSpan").innerText += ` ${B.SubTur}`;
       }
       lp.appendChild(content);
-      lp.style.display = "block";
       setTimeout(function () {
         lp.style.transform = "translateX(101%)";
         lp.style.webkitTransform = "translateX(101%)";
@@ -293,14 +296,28 @@ let ToggleBacteria = function(id,btn) {
       lp.style.webkitTransform = "translateX(0)";
       setTimeout(function () {
         let lp = onurcan.querySelector("#leftPanel");
-        lp.style.display = "none";
         onurcan.querySelector("#invisiblePanel").appendChild(lp.querySelector(".bakteri-content"));
         leftPanelAnimating = false;
       }, 200);
     }
     leftPanelActive = !leftPanelActive;
   }
-  
+  else {
+    if(leftPanelContent) {
+      onurcan.querySelector("#invisiblePanel").appendChild(leftPanelContent);
+    }
+    let B = Bakteriler.find(x => x.CinsAdi == id.split("-")[0] && x.TurAdi == id.split("-")[1]);
+    
+    let content = B._content;
+    
+    let lp = onurcan.querySelector("#leftPanel");
+    onurcan.querySelector("#leftPanelSpan").innerText = B.CinsAdi + " " + B.TurAdi;
+    if(typeof B.SubTur !== "undefined") {
+      onurcan.querySelector("#leftPanelSpan").innerText += ` ${B.SubTur}`;
+    }
+    lp.appendChild(content);
+    leftPanelContent = content;
+  }
 }
 
 let RightMenuActive = false;
@@ -340,9 +357,12 @@ let GetInfoField = function (text, color = "blue-grey") {
   card.innerText = text;
   return card;
 }
-let GetInfoCard = function (color = "grey", shade = "lighten-3") {
+let GetInfoCard = function (color = "grey", shade = "lighten-3", iscol = false) {
   let card = document.createElement("div");
   card.className = `card-panel ${color} ${shade} infoCard`;
+  if(iscol) {
+    card.className += " col s4";
+  }
   return card;
 }
 let GetTextCard = function (text, color = "orange") {

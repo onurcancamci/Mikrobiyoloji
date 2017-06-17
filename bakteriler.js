@@ -659,10 +659,19 @@ Bakteriler.push({
   }],
   Duyarlilik: ["Vankomisin","Penisilin"],
   Bulasma: ["Kontamine Peynir Sebze","Transplasental","Dogum"],
+  GecmistekiIlaclar: ["onur","goktug"],
   Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
 });
+//
+/*
+for(let k = 0; k < 100; k++) {
+  let b = JSON.parse(JSON.stringify(Bakteriler[0]));
+  b.TurAdi += k;
+  Bakteriler.push(b);
+}*/
 
 
+//[ASDFG] : [onur] [gok] [.....] 
 /*
 Bakteriler.push({
   AileAdi: "",

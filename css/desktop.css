@@ -1,12 +1,13 @@
 
 
 div {
-  font-size: 30pt;
+  /*font-size: 12pt;*/
 }
 
 
-
-
+html {
+  
+}
 body {
   background-color: #fafafa;
   margin: 0px;
@@ -16,19 +17,22 @@ body {
 
 
 .card-panel.aile-panel {
-  padding: 20px;
+  padding: 10px;
+  padding-bottom: 5px;
   margin-top: 0px;
+  margin-bottom: 8px;
 }
 .aile-isim {
-  margin-bottom: 32px;
+  margin-bottom: 5px;
 }
-.card-panel.aile-row {
-  
+.row.aile-row {
+  margin-bottom: 10px;
 }
 .card-panel.aile-bakteri {
-  /*transition: all 0.2s linear;*/
   display: grid;
-  /*height: 160px;*/
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
 }
 
 .card-panel.aile-bakteri-text {
@@ -36,19 +40,34 @@ body {
 }
 
 .bakteri-content {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   height: 95%;
+  width: 100%;
   -webkit-overflow-scrolling: touch;
+  display: block;
 }
 
 .card-panel.textCard {
   display: inline-block;
-  margin-right: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;  
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
-
+.bakteri-content > .card-panel.infoCard {
+  width: 30%;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+.card-panel.infoCard {
+  padding: 5px;
+  padding-left: 10px;
+}
 
 .card-panel.filter-category {
   width: 55%;
@@ -66,7 +85,7 @@ body {
 }
 .filterCategoryIndex {
   margin-top: 20px;
-  font-size: 20pt;
+  /*font-size: 20pt;*/
 }
 .filterElemanContainer {
   height: 90%;
@@ -88,24 +107,28 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 .circle {
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     background: #d32f2f;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     position: absolute;
     top: 45%;
     left: 55%;
     display: none;
 }
-
-#titleText {
-  font-size:40pt;
+.subtur {
+  font-size: 12;
 }
+#titleText {
+  font-size:20pt;
+}
+
 #searchBakteri {
-  font-size: 40pt;
-  height: 66pt;
+  font-size: 20pt;
+  height: 30pt;
+  margin-bottom: 10px;
 }
 
 #smallPanel {
@@ -137,6 +160,7 @@ body {
 }
 #bakteriPaneliContainer {
   height: 92%;
+  width: 30%;
   overflow-y: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -145,12 +169,11 @@ body {
 
 #leftPanel {
   position: fixed;
-  z-index: 20;
-  width: 100%;
+  width: 50%;
   padding: 24px;
-  top: 0;
-  left: -101%;
-  height: 100%;
+  top: 8%;
+  left: 30%;
+  height: 92%;
   transition: all 0.2s linear;
   -webkit-transition: all 0.2s linear;
   margin: 0;
@@ -167,6 +190,7 @@ body {
   width: 100%;
   padding-right: 0;
   height: 5vh;
+  display: none;
 }
 #bottomPanelButton {
   position: fixed;
@@ -214,7 +238,7 @@ body {
   z-index: 5;
   top: -8px;
 }
-#rightPanel > span > strong {
+#rightPanel > span > strong {/*menu*/
   font-size: 40pt;
 }
 #rightPanel > span {
