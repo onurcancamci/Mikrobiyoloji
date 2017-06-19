@@ -104,7 +104,6 @@ Bakteriler.push({
   Solunum: "Fakultatif_Anaerob",
   Enzimler: ["Laktoz","Ureaz","Sitrat","VP","Sakkaroz","Mannitol","Katalaz"],
   Hareket: "Hareketsiz",
-  Kapsul: "Kapsullu",
   KulturOrtami: [{
     Name: "MacConkey Agar",
     Gorunus: "Mukoid",
@@ -151,7 +150,6 @@ Bakteriler.push({
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
   Enzimler: ["Katalaz","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
-  Kapsul: "Kapsullu",
   Antijenler: ["O", "K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
@@ -171,7 +169,6 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Basil",
   Enzimler: ["Sakkaroz","Mannitol"],
-  Kapsul: "Kapsullu",
   Hareket: "Hareketsiz",
   Antijenler: ["O", "K"],
   KulturOrtami: [{
@@ -190,7 +187,6 @@ Bakteriler.push({
   Solunum: "Aerob_Ve_Fakultatif_Anaerob",
   Enzimler: ["Katalaz","Laktoz","Ureaz","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
-  Kapsul: "Kapsullu",
   Antijenler: ["O","K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
@@ -211,7 +207,6 @@ Bakteriler.push({
   Solunum: "Fakultatif_Anaerob",
   Enzimler: ["Katalaz","Laktoz","Ureaz","Indol","Sakkaroz","Mannitol"],
   Hareket: "Hareketsiz",
-  Kapsul: "Kapsullu",
   Antijenler: ["O", "K"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
@@ -662,16 +657,146 @@ Bakteriler.push({
   GecmistekiIlaclar: ["onur","goktug"],
   Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
 });
-//
+
+//Bacilius
+Bakteriler.push({
+  AileAdi: "Bacillaceae",
+  CinsAdi: "Bacillus",
+  TurAdi: "anthracis",
+  Gram: "Positive",
+  Shape:  "Basil",
+  Solunum: "Aerob_Ve_Fakultatif_Anaerob",
+  Enzimler: ["Katalaz"],
+  Hareket: "Hareketsiz",
+  Antijenler: ["K"],
+  KulturOrtami: [{
+    Name: "Jeloz Besiyeri",
+    Gorunus: ["R tipi"],
+    Aciklama: "Kapsullu olanlarda mukoid gorunum"
+  }],
+  Duyarlilik: ["Penisilin","Vankomisin","Lesitinaz"],
+  VirualanFaktorler: ["Endospor"],
+  Hastaliklar: [{
+    Name: "Deri Sarbonu",
+  }, {
+    Name: "Akciger Sarbonu",
+  }],
+  Aciklama : ["Sadece virulan suslarin kapsulu var"],
+});
+Bakteriler.push({
+  AileAdi: "Bacillaceae",
+  CinsAdi: "Bacillus",
+  TurAdi: "cereus",
+  Gram: "Positive",
+  Shape:  "Basil",
+  Solunum: "Aerob_Ve_Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Beta Hemoliz","Beta Laktamaz"],
+  Hareket: "Hareketli",
+  //Antijenler: [""],
+  KulturOrtami: [{
+    Name: "Jeloz Besiyeri",
+    Gorunus: ["S tipi"],
+    Aciklama: ["Ilk izolasyonda kanli besiyeri"]
+  }],
+  Direnc : ["Penisilin"],
+  Duyarlilik: ["Vankomisin","Lesitinaz"],
+  VirualanFaktorler: ["Endospor"],
+  Aciklama : ["Jelatin hidrolizi yapar","Fenil Etil Alkolde Urer","Findik Fareleri Icin Patojen Degil"],
+});
+
+//Pseudomonas
+Bakteriler.push({
+  AileAdi: "Pseudomonadaceae",
+  CinsAdi: "Pseudomonas",
+  TurAdi: "aeruginosa",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob",
+  Enzimler: ["Katalaz","Oksidaz","Beta Hemoliz"],
+  Hareket: "Hareketli",
+  //Antijenler: [],
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    Gorunus: ["Sari Yesil"],
+    //Aciklama: []
+  }],
+  Direnc : ["C390","Vankomisin"],
+  Duyarlilik: ["Kolistin","Kotrimoksazol"],
+  VirualanFaktorler: [Aciklamali("Flagella","Unipolar")],
+  Aciklama : ["Fluoresent Grup","Firsatci Patojendirler"],
+});
+
+//Acinetobacter
+Bakteriler.push({
+  AileAdi: "Moraxellaceae",
+  CinsAdi: "Acinetobacter",
+  TurAdi: "baumannii",
+  Gram: "Negative",
+  Shape:  "Kokobasil",
+  Solunum: "Aerob",
+  Enzimler: ["Katalaz",""],
+  Hareket: "Hareketli",
+  Antijenler: ["K"],
+  KulturOrtami: [{
+    Name: "MacConkey Agar",
+    //Gorunus: [],
+    //Aciklama: []
+  }],
+  Direnc : ["Vankomisin","Penisilin","1. Kusak Sefalosporin","2. Kusak Sefalosporin","Florokinolon"],
+  Duyarlilik: ["Kolistin"],
+  VirualanFaktorler: [Aciklamali("Fimbriya","Polar Fimbriya")],
+  Aciklama : ["Saglikli Insanlarda 25% Ihtimalle Deride, 7% Ihtimalle Bogazda Bulunur"],
+});
+
+//Burkholderia
+Bakteriler.push({
+  AileAdi: "Burkholderiaceae",
+  CinsAdi: "Burkholderia",
+  TurAdi: "pseudomallei",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Aerob",
+  Enzimler: ["Katalaz","Oksidaz"],
+  Hareket: "Hareketli",
+  //Antijenler: [],
+  KulturOrtami: [{
+    Name: "Asdown Agar",
+    Gorunus: ["Cornflower Head Morphology"],
+    Aciklama: ["Secici Agar"]
+  }, {
+    Name: "MacConkey Agar",
+  }],
+  Direnc : ["Kolistin"],
+  //Duyarlilik: [],
+  VirualanFaktorler: [Aciklamali("Fimbriya","Polar Fimbriya")],
+  //Aciklama : [],
+});
+
+//Stenotrophomonas maltophilia ekle
 /*
-for(let k = 0; k < 100; k++) {
-  let b = JSON.parse(JSON.stringify(Bakteriler[0]));
-  b.TurAdi += k;
-  Bakteriler.push(b);
-}*/
+//Clostridium
+Bakteriler.push({
+  AileAdi: "Clostridiaceae",
+  CinsAdi: "Clostridium",
+  TurAdi: "tetani",
+  Gram: Aciklamali("Positive","24 Saat Inkubasyondan Sonra Negatif Olur"),
+  Shape:  "Basil",
+  Solunum: "",
+  Enzimler: [],
+  Hareket: "",
+  Antijenler: [],
+  KulturOrtami: [{
+    Name: "",
+    Gorunus: [],
+    Aciklama: []
+  }],
+  Direnc : [],
+  Duyarlilik: [],
+  VirualanFaktorler: [],
+  Aciklama : [],
+});
+*/
 
-
-//[ASDFG] : [onur] [gok] [.....] 
 /*
 Bakteriler.push({
   AileAdi: "",
