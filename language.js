@@ -7,11 +7,16 @@ let IndexFieldFilterObj = {
   ["Resim"] : false,
   ["TurAdi"] : false,
   ["SubTur"] : false,
+  ["CinsAdi"] : false,
+  ["Hastaliklar"] : false,
+  ["AileAdi"] : false,
+  ["Bulasma"] : false,
   
   
 };
 let IndexPathFilterObj = {
   ["KulturOrtami-Gorunus"] : false,
+  ["Vektor-Kaynak"] : false,
   
 };
 let DisplayLanguage = "Turkce";//Turkce
