@@ -654,7 +654,7 @@ Bakteriler.push({
   }],
   Duyarlilik: ["Vankomisin","Penisilin"],
   Bulasma: ["Kontamine Peynir Sebze","Transplasental","Dogum"],
-  GecmistekiIlaclar: ["onur","goktug"],
+  //GecmistekiIlaclar: ["onur","goktug"],
   Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
 });
 
