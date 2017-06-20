@@ -8,9 +8,10 @@ let IndexFieldFilterObj = {
   ["TurAdi"] : false,
   ["SubTur"] : false,
   
+  
 };
 let IndexPathFilterObj = {
-  
+  ["KulturOrtami-Gorunus"] : false,
   
 };
 let DisplayLanguage = "Turkce";//Turkce
