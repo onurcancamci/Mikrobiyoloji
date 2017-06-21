@@ -877,7 +877,7 @@ Bakteriler.push({
   Solunum: "Fakultatif_Anaerob",
   Enzimler: ["Katalaz","Oksidaz"],
   Hareket: "Hareketsiz",
-  Antijenler: [],
+  //Antijenler: [],
   KulturOrtami: [{
     Name: "Kanli Agar",
     //Gorunus: [],
