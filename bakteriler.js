@@ -531,7 +531,7 @@ Bakteriler.push({
   Solunum: "Fakultatif_Anaerob",
   Enzimler: ["Indol","Katalaz","Mannitol","Hemolizin",Aciklamali("Laktoz","Salmonella Ve Shigella dan ayirir"),Aciklamali("Sakkaroz","Bazen")],
   Hareket: ["Hareketli","Hareketsiz"],
-  Kapsul: Aciklamali("Kapsullu","Bazilari"),
+  //?Kapsul: Aciklamali("Kapsullu","Bazilari"),
   Antijenler: ["O","K","H","P"],
   KulturOrtami: [{
     Name: "MacConkey Agar",
@@ -654,7 +654,7 @@ Bakteriler.push({
   }],
   Duyarlilik: ["Vankomisin","Penisilin"],
   Bulasma: ["Kontamine Peynir Sebze","Transplasental","Dogum"],
-  GecmistekiIlaclar: ["onur","goktug"],
+  //GecmistekiIlaclar: ["onur","goktug"],
   Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
 });
 
