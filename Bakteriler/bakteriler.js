@@ -271,7 +271,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Fakultatif_Anaerob",
-  Enzimler: ["Katalaz","Dnaz","Lipaz","Gelatinaz"],
+  Enzimler: ["Katalaz","DNAaz","Lipaz","Gelatinaz"],
   Hareket: "Hareketli",
   Antijenler: ["H" , "O"],
   KulturOrtami: [{
@@ -734,7 +734,7 @@ Bakteriler.push({
   Gram: "Negative",
   Shape:  "Kokobasil",
   Solunum: "Aerob",
-  Enzimler: ["Katalaz",""],
+  Enzimler: ["Katalaz"],
   Hareket: "Hareketli",
   Antijenler: ["K"],
   KulturOrtami: [{
@@ -773,7 +773,7 @@ Bakteriler.push({
 });
 
 //Stenotrophomonas maltophilia ekle
-/*
+
 //Clostridium
 Bakteriler.push({
   AileAdi: "Clostridiaceae",
@@ -781,7 +781,123 @@ Bakteriler.push({
   TurAdi: "tetani",
   Gram: Aciklamali("Positive","24 Saat Inkubasyondan Sonra Negatif Olur"),
   Shape:  "Basil",
-  Solunum: "",
+  Solunum: "Anaerob",
+  Enzimler: ["Beta Hemoliz","Lesitinaz","CAMP"],
+  Hareket: "Hareketsiz",
+  //Antijenler: [],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    Gorunus: ["Beta Hemoliz"],
+    //Aciklama: []
+  }],
+  Direnc : ["Kolistin"],
+  Duyarlilik: ["Vankomisin"],
+  VirualanFaktorler: ["Endospor","Toksin"],
+  //Aciklama : [],
+});
+
+
+//Staphylococcus
+Bakteriler.push({
+  AileAdi: "Staphylococcaceae",
+  CinsAdi: "Staphylococcus",
+  TurAdi: "aureus",
+  Gram: "Positive",
+  Shape:  Aciklamali("Stafilokok","Uzum Salkimi Goruntusu"),
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Beta Hemoliz","Staphaurex","Koagulaz","DNAaz"],
+  Hareket: "Hareketsiz",
+  //Antijenler: [],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    Gorunus: ["Beta Hemoliz Yapar"],
+    //Aciklama: []
+  }, {
+    Name: "Basit Besiyeri",
+  }, {
+    Name: "MacConkey Agar",
+  }],
+  //Direnc : [],
+  //Duyarlilik: [],
+  //VirualanFaktorler: [],
+  Aciklama : ["Altin Sarisi Pigmenti Vardir","Sporsuz Bakteriler Icinde En Dayaniklilarindandir","Henuz Yeterli Bilgi Yok"],
+});
+
+
+//Streptococcus
+Bakteriler.push({
+  AileAdi: "Streptococcaceae",
+  CinsAdi: "Streptococcus",
+  TurAdi: "pyogenes",
+  Gram: "Positive",
+  Shape:  "Streptokok",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Beta Hemoliz","Pyrase"],
+  Hareket: "Hareketsiz",
+  Antijenler: ["Hucre Duvarinda A"],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    Gorunus: ["Beta Hemoliz"],
+    //Aciklama: []
+  }],
+  //Direnc : [],
+  Duyarlilik: ["Vankomisin", "Penisilin"],
+  //VirualanFaktorler: [],
+  Aciklama : ["Pyojenik Grup"],
+});
+Bakteriler.push({
+  AileAdi: "Streptococcaceae",
+  CinsAdi: "Streptococcus",
+  TurAdi: "pneumoniae",
+  Gram: "Positive",
+  Shape:  "Diplokok",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Safrada Erir",Aciklamali("Alfa Hemoliz","Anaerobik Ortamda"),Aciklamali("Beta Hemoliz",["Aerobik Ortamda","?"])],
+  Hareket: "Hareketsiz",
+  //Antijenler: [],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    Gorunus: ["Alfa Hemoliz"],
+    //Aciklama: []
+  }],
+  //Direnc : [],
+  Duyarlilik: ["Optokin","Vankomisin"],
+  //VirualanFaktorler: [],
+  //Aciklama : [],
+});
+
+
+//Haemophilus
+Bakteriler.push({
+  AileAdi: "Pasteurellaceae",
+  CinsAdi: "Haemophilus",
+  TurAdi: "influenzae",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Katalaz","Oksidaz"],
+  Hareket: "Hareketsiz",
+  Antijenler: [],
+  KulturOrtami: [{
+    Name: "Kanli Agar",
+    //Gorunus: [],
+    Aciklama: ["S. aureus un Hemoliz Alaninda Cogalir","V Faktoru Gerekir"]
+  }, {
+    Name: "Cukulatali Agar",
+    Aciklama: ["X ve V Faktorlerini Icerir"],
+  }],
+  Direnc : ["Vankomisin"],
+  Duyarlilik: ["Kolistin"],
+  //VirualanFaktorler: [],
+  Aciklama : ["MacConkey Agar da Cogalmaz"],
+});
+/*Bakteriler.push({
+  AileAdi: "Pasteurellaceae",
+  CinsAdi: "Haemophilus",
+  TurAdi: "haemolyticus",
+  Gram: "Negative",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
   Enzimler: [],
   Hareket: "",
   Antijenler: [],
@@ -794,8 +910,8 @@ Bakteriler.push({
   Duyarlilik: [],
   VirualanFaktorler: [],
   Aciklama : [],
-});
-*/
+});*/
+
 
 /*
 Bakteriler.push({

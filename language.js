@@ -21,9 +21,11 @@ let IndexPathFilterObj = {
 };
 let DisplayLanguage = "Turkce";//Turkce
 
-
 //true false
 let IndexFieldFilter = function (field, path) {
+  if(Debug) {
+    return true;
+  }
   let fieldPass = true;
   let pathPass = true;
   if(field == undefined || typeof IndexFieldFilterObj[field] == "undefined") {
@@ -107,7 +109,7 @@ let Dil = {
     [`22°C de Hareketli`] : `#`,
     [`Kan Bankalarinda Depolanan Kanda Cogalabilir`] : `#`,
     [`Tedavide Antibiyoterapi onerilmez, Gerekmesi yada Septisemi Disinda`] : `#`,
-    [`Enzimler`] : `#`,
+    [`Enzimler`] : `Enzimler Ve Testler`,
     [`Ureaz`] : `#`,
     [`O`] : `#`,
     [`H`] : `#`,

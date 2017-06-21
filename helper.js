@@ -118,8 +118,20 @@ onurcan.querySelector = function (query) {
 }
 
 
-
-
+let DebugEnabled = [];
+let DebugDisabled = [];
+let Debug = false;
+let DebugToggle = function () {
+  if(!Debug) {
+    document.querySelector("#titleText").innerText = "Bakteriler (Debug)";
+    Debug = !Debug;
+    DebugEnabled.map(e => e());
+  } else {
+    document.querySelector("#titleText").innerText = "Bakteriler";
+    Debug = !Debug;
+    DebugDisabled.map(e => e());
+  }
+}
 
 
 

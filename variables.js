@@ -25,7 +25,7 @@ if ('addEventListener' in document) {
 
 
 let HaveNotification = true;
-let Debug = false;
+
 
 
 

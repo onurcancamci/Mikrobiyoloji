@@ -83,10 +83,16 @@ let ObjRouter = function (Val, Bakteri, Field, Parent = TheIndex, Path) {
 }
 let BakteriRouter = function (Bakteri) {
   for(let Field in Bakteri) {
+    if(Field[0] != "_")
     ObjRouter(Bakteri[Field], Bakteri, Field, TheIndex, Field);
   }
 }
-
+let ConstructIndex = function (bakteriler = Bakteriler) {
+  TheIndex = {};
+  for(let B of bakteriler) {
+    BakteriRouter(B);
+  }
+}
 
 
 

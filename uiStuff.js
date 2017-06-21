@@ -87,8 +87,6 @@ let IndexResolver = function (obj, alanPrefix = "") {
     }
   }
 }
-
-
 //filter menusu bottom panel icin
 let AllFilterElemans = [];
 let binct = 0;
@@ -140,6 +138,18 @@ let AddEleman = function (name, socket, fieldName) {
   socket.appendChild(div);
   return div;
 }
+let ConstructBottomPanel = function (index = TheIndex) {
+  document.querySelector("#filterCategoryContainer").innerHTML = "";
+  document.querySelector("#filterCategoryContainer2").innerHTML = "";
+  document.querySelector("#filterCategoryIndex1").innerHTML = "";
+  document.querySelector("#filterCategoryIndex2").innerHTML = "";
+  
+  AllFilterElemans = [];
+  binct = 0;
+  IndexResolver(index);
+}
+
+
 
 let BottomPanelButtonActive = false;
 let BottomPanelButton = function () {
