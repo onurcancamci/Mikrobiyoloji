@@ -136,7 +136,8 @@ Bakteriler.push({
   }, {
     Name: "Menenjit"
   }],
-  Resim : ["image@Agarda@images/Klebsiella_Pneumoniae_01.png","image@Mikroskopta@images/klebsiella_pneumoniae_mikroskop.jpg"],
+  Resim : ["image@Agarda@images/Klebsiella_Pneumoniae_01.png",
+            "image@Mikroskopta@images/klebsiella_pneumoniae_mikroskop.jpg"],
   
 });
 Bakteriler.push({
