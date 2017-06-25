@@ -892,6 +892,9 @@ Bakteriler.push({
   //VirualanFaktorler: [],
   Aciklama : ["MacConkey Agar da Cogalmaz"],
 });
+
+
+
 /*Bakteriler.push({
   AileAdi: "Pasteurellaceae",
   CinsAdi: "Haemophilus",
