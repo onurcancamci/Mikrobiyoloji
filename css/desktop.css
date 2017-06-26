@@ -45,7 +45,12 @@ body {
   height: 95%;
   width: 100%;
   -webkit-overflow-scrolling: touch;
-  display: block;
+  display: flex;
+}
+.bakteri-content-row {
+  width: 32%;
+  height: 100%;
+  margin-right: 10px;
 }
 
 .card-panel.textCard {

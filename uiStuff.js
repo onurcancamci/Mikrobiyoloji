@@ -51,8 +51,15 @@ let PremakeLeftPanel = function () {
   for(let B of Bakteriler) {
     let content = document.createElement("div");
     content.className = "bakteri-content";
+    let rs = [];
+    let rsct = 0;
     if(!ifMobile) {
-      //content.className += " row";
+      for(let k = 0; k < 3; k++) {
+        let row = document.createElement("div"); 
+        row.className = "bakteri-content-row";
+        rs.push(row);
+        content.appendChild(row);
+      }
     }
     for(field in B) {
       if(field[0] == "_") {
@@ -62,7 +69,13 @@ let PremakeLeftPanel = function () {
       let socket = GetInfoField(Sozluk(field) + ": ");
       UnWrapField(B[field], socket);
       fieldInfoCard.appendChild(socket);
-      content.appendChild(fieldInfoCard);
+      if(ifMobile) {
+        content.appendChild(fieldInfoCard);
+      } else {
+        rs[rsct].appendChild(fieldInfoCard);
+        rsct = (rsct + 1) % 3;
+      }
+      
     }
     onurcan.querySelector("#invisiblePanel").appendChild(content);
     B._content = content;
