@@ -24,7 +24,7 @@ let Aciklamali = function (Name, Aciklama) {
   return {Name,Aciklama};
 }
 
-
+//a
 
 
 
