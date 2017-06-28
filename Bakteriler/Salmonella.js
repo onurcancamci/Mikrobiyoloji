@@ -19,4 +19,4 @@ Bakteriler.push({
   //Aciklama : [],
 });
 
-//asd
+
