@@ -18,3 +18,5 @@ Bakteriler.push({
   VirualanFaktorler: [{Name: "Flagella", Aciklama: "Peritrichous"}],
   //Aciklama : [],
 });
+
+//asd
