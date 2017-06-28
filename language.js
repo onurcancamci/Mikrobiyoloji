@@ -144,7 +144,7 @@ let Sozluk = function (kelime) {
 let Genelleme = {
   ["Gentamisin"] : ["Antibiyotik", "Aminoglikozid", "Gentamisin"],
   ["K"] : {
-    Aciklama: ["Kapsul Antijeni"]
+    Aciklama: ["Kapsul Antijeni"],
   },
   [`Bircok Kultur`]: [`MacConkey Agar`,`Bircok Kultur`],
   [`Akdeniz Atesi`]: {
