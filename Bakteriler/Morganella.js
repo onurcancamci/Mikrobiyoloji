@@ -10,7 +10,7 @@ Bakteriler.push({
   Hareket: "Hareketli",
   Antijenler: ["O","H"],
   KulturOrtami: [{
-    Name: "MacConkey",
+    Name: "MacConkey Agar",
   }],
   Direnc : ["Vankomisin","Kolistin"],
   VirualanFaktorler: [{Name: "Flagella", Aciklama: "Peritrichous"}],
