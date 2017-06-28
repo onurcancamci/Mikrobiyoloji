@@ -24,7 +24,7 @@ let Aciklamali = function (Name, Aciklama) {
   return {Name,Aciklama};
 }
 
-//a
+
 
 
 
@@ -34,20 +34,6 @@ let Aciklamali = function (Name, Aciklama) {
 //Ehrlichia Anaplasma Neorickettsia ekle
 //Providencia Ekle
 //Stenotrophomonas maltophilia ekle
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
