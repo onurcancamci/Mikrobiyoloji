@@ -51,8 +51,15 @@ let PremakeLeftPanel = function () {
   for(let B of Bakteriler) {
     let content = document.createElement("div");
     content.className = "bakteri-content";
+    let rs = [];
+    let rsct = 0;
     if(!ifMobile) {
-      //content.className += " row";
+      for(let k = 0; k < 3; k++) {
+        let row = document.createElement("div"); 
+        row.className = "bakteri-content-row";
+        rs.push(row);
+        content.appendChild(row);
+      }
     }
     for(field in B) {
       if(field[0] == "_") {
@@ -62,7 +69,13 @@ let PremakeLeftPanel = function () {
       let socket = GetInfoField(Sozluk(field) + ": ");
       UnWrapField(B[field], socket);
       fieldInfoCard.appendChild(socket);
-      content.appendChild(fieldInfoCard);
+      if(ifMobile) {
+        content.appendChild(fieldInfoCard);
+      } else {
+        rs[rsct].appendChild(fieldInfoCard);
+        rsct = (rsct + 1) % 3;
+      }
+      
     }
     onurcan.querySelector("#invisiblePanel").appendChild(content);
     B._content = content;
@@ -103,21 +116,29 @@ let AddCategory = function (name) {
   let fec = document.createElement("div");
   fec.className = "filterElemanContainer";
   categoryDiv.appendChild(fec);
-  if(binct == 0) {
-    document.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
-    document.querySelector("#filterCategoryIndex1").innerText += "/" + nname;
+  
+  if(ifMobile) {
+    
+    if(binct == 0) {
+      document.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
+      document.querySelector("#filterCategoryIndex1").innerText += "/" + nname;
+    } else {
+      document.querySelector("#filterCategoryContainer2").appendChild(categoryDiv);
+      document.querySelector("#filterCategoryIndex2").innerText += "/" + nname;
+    }
+    
+    binct = (binct + 1) % 2;
+    
   } else {
-    document.querySelector("#filterCategoryContainer2").appendChild(categoryDiv);
-    document.querySelector("#filterCategoryIndex2").innerText += "/" + nname;
+    document.querySelector("#filterCategoryContainer").appendChild(categoryDiv);
   }
   
-  binct = (binct + 1) % 2;
   return fec;
   
 }
 let AddEleman = function (name, socket, fieldName) {
   let div = document.createElement("div");
-  div.className = "card-panel 0 orange-text text-darken-3 grey lighten-5";
+  div.className = "card-panel 0 filter-eleman orange-text text-darken-3 grey lighten-5";
   div.innerText = Sozluk(name);
   div.id = fieldName + "-" + name;
   div.onclick = function () {
@@ -125,11 +146,11 @@ let AddEleman = function (name, socket, fieldName) {
     status = parseInt(status);
     status = (status + 1) % 3;
     if(status == 0) {
-      this.className = `card-panel ${status} orange-text text-darken-3 grey lighten-5`;
+      this.className = `card-panel ${status} filter-eleman orange-text text-darken-3 grey lighten-5`;
     } else if(status == 1) {
-      this.className = `card-panel ${status} white-text green darken-2`;
+      this.className = `card-panel ${status} filter-eleman white-text green darken-2`;
     } else {
-      this.className = `card-panel ${status} white-text red darken-4`;
+      this.className = `card-panel ${status} filter-eleman white-text red darken-4`;
     }
     FilterRule(this.id, status);
     
@@ -354,7 +375,12 @@ let ToggleRightMenu = function () {
   RightMenuActive = !RightMenuActive;
 }
 
-
+if(!ifMobile) {
+  document.querySelector("#bottomPanelButton").style.display = "none";
+  document.querySelector("#filterCategoryContainer2").style.display = "none";
+  document.querySelectorAll(".filterCategoryIndex")[0].style.display = "none";
+  document.querySelectorAll(".filterCategoryIndex")[1].style.display = "none";
+}
 
 
 
