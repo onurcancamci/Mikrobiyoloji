@@ -131,7 +131,7 @@ let Dil = {
 }
 let Dict = Dil[DisplayLanguage];
 let Sozluk = function (kelime) {
-  if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#") {
+  if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#" || Debug) {
     return kelime;
   }
   return Dict[kelime];
