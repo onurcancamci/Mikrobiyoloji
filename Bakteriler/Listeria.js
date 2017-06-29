@@ -18,3 +18,25 @@ Bakteriler.push({
   //GecmistekiIlaclar: ["onur","goktug"],
   Aciklama : ["Listeria Turlerinden Sadece L. monocytogenes ve L. ivanovii Patojeniktir"],
 });
+
+
+Bakteriler.push({
+  AileAdi: "Listeriaceae",
+  CinsAdi: "Listeria",
+  TurAdi: "ivanovii",
+  Gram: "Positive",
+  Shape:  "Basil",
+  Solunum: "Fakultatif_Anaerob",
+  Enzimler: ["Beta Hemoliz","Katalaz"],
+  Hareket: "",
+  Antijenler: [],
+  KulturOrtami: [{
+    Name: "",
+    Gorunus: [],
+    Aciklama: []
+  }],
+  Direnc : [],
+  Duyarlilik: [],
+  VirualanFaktorler: [],
+  Aciklama : [],
+});

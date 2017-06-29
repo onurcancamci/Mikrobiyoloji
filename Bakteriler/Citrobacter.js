@@ -17,7 +17,7 @@ Bakteriler.push({
   }],
   Direnc : ["Vankomisin"],
   Duyarlilik: "Kolistin",
-  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  VirualanFaktorler: Aciklamali("Flagella","Peritrichous"),
   Aciklama : ["Karbon kaynagi olarak sadece Sitrat kullanabilir","Normal Florada Bulunur?","Firsatci Enfeksiyon Yapabilir","Burda Yeterince Bilgi Henuz Yok"],
 });
 Bakteriler.push({
@@ -38,7 +38,7 @@ Bakteriler.push({
   }],
   Direnc : ["Vankomisin"],
   Duyarlilik: "Kolistin",
-  VirualanFaktorler: {Name: "Flagella", Aciklama: "Peritrichous"},
+  VirualanFaktorler: Aciklamali("Flagella","Peritrichous"),
   Aciklama : ["Karbon kaynagi olarak sadece Sitrat kullanabilir","Normal Floarada Bulunur",
   "Azot Dongusunde Onemli","Vucut direnci dusuk kisilerde ve premature bebeklerde enfeksiyon",
   "En onemli Citrobacter","Burda Yeterince Bilgi Henuz Yok"],

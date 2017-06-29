@@ -24,7 +24,7 @@ let ObjectEkle = function (Val, Bakteri, Field, Parent = TheIndex, Path) {
   StringEkle(Val.Name, Bakteri, Field, Parent, Path);
   
   for(let subfields in Val) {
-    if(!IndexFieldFilter(subfields, Path + "-" + subfields)) {
+    if(!IndexFieldFilter(subfields, Path + "-" + subfields) || subfields == "Name") {
       continue;
     }
     ObjRouter(Val[subfields],Bakteri, subfields, Parent[Field]._Sub, Path + "-" + subfields);
