@@ -1,12 +1,12 @@
 
 
 let Core = function (Objs = [], Genelleme = {}) {
-  let index = {};
-  
-  
-  
-  
   this.Index = new Index(Objs, Genelleme);
+  this.Ekle = this.Index._Ekle;
+  
+  
+  
+  
 }
 
 //bakteri yazsa da alakasiz
@@ -100,11 +100,15 @@ let Index = function (Bakteriler = [], Genelleme) {
   
 }
 
-
+let SearchIndex = function () {
+  
+}
 
 
 
 let core = new Core(Bakteriler, Genelleme);
+
+
 console.log(core);
 
 

@@ -130,7 +130,21 @@ let Dil = {
   } 
 }
 let Dict = Dil[DisplayLanguage];
-let Sozluk = function (kelime) {
+let Sozluk = function (kelime, multiLanguage = false) {
+  if(multiLanguage) {
+    let arr = [];
+    for(dict in Dil) {
+      if((typeof dict[kelime] == "undefined" || dict[kelime] == "#" || Debug) && arr.findIndex(x => x == kelime) == -1) {
+        arr.push(kelime);
+      } else {
+        arr.push(dict[kelime]);
+      }
+    }
+    return arr;
+  }
+  
+  
+  
   if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#" || Debug) {
     return kelime;
   }
