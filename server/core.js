@@ -1,5 +1,7 @@
 
 //server tarafli
+let {Dil,Genelleme} = require("./language.js");
+let {Loader} = require("./helpers.js");
 
 
 let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "TurAdi", "SubTur"]) {
@@ -7,7 +9,31 @@ let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "Tur
   this.Ekle = function (B) {
     this.Index._Ekle(B);
     this.SearchIndex._Ekle(B);
-  };
+  }
+  this.Remove = function (B) {
+    this.Index._Remove(B);
+    this.SearchIndex._Remove(B);
+  }
+  this.Update = function (B) {
+    this.Index._Update(B);
+    this.SearchIndex._Update(B);
+  }
+  let StringRemoveAt = function(all, index) {
+    let newall = "";
+    all.split("-").map((e,i,arr) => {
+      if(i != index) {
+        newall += e;
+      }
+      if(i != arr.length - 1 && (index == arr.length - 1 && i != arr.length - 2 )) {
+        newall += "-";
+      }
+    });
+    newall.trim();
+    return newall;
+  }
+  let StringRemoveLast = function(all) {
+    return StringRemoveAt(all,all.split("-").length - 1);
+  }
   this.GetIdFull = function (IdFields, B) {
     let id = "";
     
@@ -131,6 +157,21 @@ let Index = function (Bakteriler = [], Genelleme) {
     BakteriRouter(B, this);
   } 
   
+  this._Remove = (B) => {
+    for(let f in this) {
+      if(f[0] == "_") continue;
+      for(let f2 in this[f]) {
+        if(f2[0] == "_") continue;
+        let ind = this[f][f2].findIndex(x => x == B);
+        if(ind != -1) this[f][f2].splice(ind,1);
+      }
+    }
+  }
+  
+  this._Update = (B) => {
+    this._Remove(B);
+    this._Ekle(B);
+  }
   
 }
 
@@ -245,6 +286,15 @@ let SearchIndex = function (Bakteriler = [], Dil ,GetBakteriID) {
     return false;
   }
   
+  this._Remove = (B) => {
+    this[GetBakteriID(B)] = [];
+  }
+  
+  this._Update = (B) => {
+    this._Remove(B);
+    this._Ekle(B);
+  }
+  
 }
 
 let Filter = function (GetBakteriID, Bakteriler, Index) {
@@ -309,21 +359,16 @@ let Filter = function (GetBakteriID, Bakteriler, Index) {
 }
 
 
-
+Loader.LoadBakteriler();
 
 let core = new Core(Bakteriler, Genelleme, Dil, ["CinsAdi", "TurAdi", "SubTur"]);
 
 
-console.log(core);
+
+//console.log(core);
 
 
-
-
-
-
-
-
-
+//console.log(Bakteriler);
 
 
 

@@ -1,24 +1,7 @@
 
 
-let IndexFieldFilterObj = {
-  ["Name"] : false,
-  ["Aciklama"] : false,
-  ["Resim"] : false,
-  ["TurAdi"] : false,
-  ["SubTur"] : false,
-  ["CinsAdi"] : false,
-  ["Hastaliklar"] : false,
-  ["AileAdi"] : false,
-  ["Bulasma"] : false,
-  
-  
-};
-let IndexPathFilterObj = {
-  ["KulturOrtami-Gorunus"] : false,
-  ["Vektor-Kaynak"] : false,
-  
-};
-let DisplayLanguage = "Turkce";//Turkce
+
+
 
 //true false
 let IndexFieldFilter = function (field, path) {
@@ -128,7 +111,7 @@ let Dil = {
     [`Kontamine Besin`] : `#`,
   } 
 }
-let Sozluk = function (kelime, multiLanguage = false) {
+let Sozluk = function (kelime, multiLanguage = false, language = "Turkce") {
   if(multiLanguage) {
     let arr = [];
     for(dict in Dil) {
@@ -141,7 +124,7 @@ let Sozluk = function (kelime, multiLanguage = false) {
     }
     return arr;
   }
-  let Dict = Dil[DisplayLanguage];
+  let Dict = Dil[language];
   if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#" || Debug) {
     return kelime;
   }
@@ -166,6 +149,7 @@ let Genelleme = {
 
 
 
+module.exports = {Dil, Genelleme};
 
 
 
@@ -180,25 +164,6 @@ let Genelleme = {
 
 
 
-let SBS; //bitince sonuna } ekle
-let NDict = {};
-let SozlukBuild = function (kelime) {
-  if(!SBS) {
-    SBS = `${DisplayLanguage} : { \n`;
-  }
-  if(typeof NDict[kelime] != "undefined") {
-    return;
-  }
-  if(typeof Dict[kelime] != "undefined") {
-    SBS += `[\`${kelime}\`] : \`${Dict[kelime]}\`,\n`;
-    NDict[kelime] = Dict[kelime];
-  } else {
-    //let sonuc = prompt(kelime,"#");
-    let sonuc = "#";
-    NDict[kelime] = sonuc;
-    SBS += `[\`${kelime}\`] : \`${sonuc}\`,\n`;
-  }
-}
 
 
 
