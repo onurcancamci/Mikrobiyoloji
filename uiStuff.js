@@ -384,6 +384,11 @@ if(!ifMobile) {
 
 
 
+let RefreshArayuz = function () {
+  
+}
+
+
 
 
 

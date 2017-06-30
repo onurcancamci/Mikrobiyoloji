@@ -7,8 +7,8 @@ Bakteriler.push({
   CinsAdi: "",
   TurAdi: "",
   Gram: "Negative","Positive",
-  
   Shape:  "Basil","Kokobasil","Kok","Spiral","Diplokok","Streptokok","Stafilokok",//baska olanlar eklenir
+  
   
   Solunum: "Fakultatif_Anaerob","Aerob_Ve_Fakultatif_Anaerob","Anaerob","Aerob",
   

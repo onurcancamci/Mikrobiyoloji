@@ -1,5 +1,4 @@
 
-//1
 
 let IndexFieldFilterObj = {
   ["Name"] : false,
@@ -129,14 +128,26 @@ let Dil = {
     [`Kontamine Besin`] : `#`,
   } 
 }
-let Dict = Dil[DisplayLanguage];
-let Sozluk = function (kelime) {
-  if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#") {
+let Sozluk = function (kelime, multiLanguage = false) {
+  if(multiLanguage) {
+    let arr = [];
+    for(dict in Dil) {
+      if(dict[0] == "_") continue;
+      if((typeof dict[kelime] == "undefined" || dict[kelime] == "#" || Debug) && arr.findIndex(x => x == kelime) == -1) {
+        arr.push(kelime);
+      } else {
+        arr.push(dict[kelime]);
+      }
+    }
+    return arr;
+  }
+  let Dict = Dil[DisplayLanguage];
+  if(typeof Dict[kelime] == "undefined" || Dict[kelime] == "#" || Debug) {
     return kelime;
   }
   return Dict[kelime];
 }
-
+Dil._Sozluk = Sozluk;
 
 
 //ya Array
