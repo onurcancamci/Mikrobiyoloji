@@ -1,7 +1,7 @@
 
 //server tarafli
-let {Dil,Genelleme} = require("./language.js");
-let {Loader} = require("./helpers.js");
+
+
 
 
 let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "TurAdi", "SubTur"]) {
@@ -359,9 +359,9 @@ let Filter = function (GetBakteriID, Bakteriler, Index) {
 }
 
 
-Loader.LoadBakteriler();
-
-let core = new Core(Bakteriler, Genelleme, Dil, ["CinsAdi", "TurAdi", "SubTur"]);
+module.exports = {
+  Core
+}
 
 
 
