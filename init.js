@@ -5,7 +5,7 @@
 ConstructIndex(); //non ui
 for(let B of Bakteriler) {
   AddBacteriaToDisplay(B);//sadece isimler ve aileler //only ui with variables
-  BakteriRouterSearch(B); //non ui
+  BakteriRouterSearch(B); //non ui +
 }
 
 ConstructBottomPanel(); //only ui with variables
