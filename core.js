@@ -40,7 +40,7 @@ let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "Tur
     
     return ctind;
   }
-  
+  this.Filter = new Filter(this.GetId, Objs, this.Index);
 }
 
 //bakteri yazsa da alakasiz
@@ -244,6 +244,67 @@ let SearchIndex = function (Bakteriler = [], Dil ,GetBakteriID) {
     }
     return false;
   }
+  
+}
+
+let Filter = function (GetBakteriID, Bakteriler, Index) {
+  this.Que = [];//{path = "Hastaliklar-Belirtiler", Val = "ates", status = 1} // 0 = normal, 1 = whitelist, 2 = blacklist, 3 = or whitelist
+  
+  
+  
+  this.AddQue = (Path, Val, Status) => {
+    let Q = this.Que.find(e => e.Path == Path && e.Val == Val);
+    if(Q) {
+      Q.Status = Status;
+    } else {
+      this.Que.push({Path, Val, Status});
+    }
+  }
+  
+  
+  
+  this.Execute = () => {
+    let Q = [];
+    this.Que.map((e,i,arr) => {
+      if(e.Status != 0) {
+        Q.push(e);
+      }
+    });
+    this.Que = Q;
+    let Yey = [];
+    let Nay = [];
+    for(let B of Bakteriler) {
+      let orList = {};
+      let whitelist = true;
+      let blacklist = true;
+      for(let rule of this.Que) {
+        if(whitelist == false || blacklist == false) continue;
+        if(Index[rule.Path][rule.Val].findIndex(e => e == B) == -1) {//bulamadi
+          if(rule.Status == 1) {//whitelist idi
+            whitelist = false;
+          }
+        } else {//buldu
+          if(rule.Status == 2) {//blacklist idi
+            blacklist = false;
+          } else if(rule.Status == 3) {
+            if(typeof orList[Path] === "undefined") orList[Path] = true;
+          }
+        }
+      }
+      let orSonuc = true;
+      for(let o in orList) {
+        if(typeof orList[o] === "undefined") orSonuc = false;
+      }
+      
+      let sonuc = whitelist && blacklist && orList;
+      if(sonuc) Yey.push(B);
+      else Nay.push(B);
+    }
+    return {Yey,Nay};
+  }
+  
+  
+  
   
 }
 

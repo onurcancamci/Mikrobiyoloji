@@ -19,7 +19,7 @@ Bakteriler.push({
 });
 
 
-Bakteriler.push({
+/*Bakteriler.push({
   AileAdi: "Listeriaceae",
   CinsAdi: "Listeria",
   TurAdi: "ivanovii",
@@ -38,4 +38,4 @@ Bakteriler.push({
   Duyarlilik: [],
   VirualanFaktorler: [],
   Aciklama : [],
-});
+});*/

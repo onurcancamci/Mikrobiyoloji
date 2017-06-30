@@ -83,7 +83,7 @@
  
  Listeriaceae [] //kendim ekledim ismi, boyle bir aile var olmayabilir
  +"L. monocytogenes"
- +"L. ivanovii"
+ -"L. ivanovii"
  
  Lysobacteraceae []
  Methanobacteriaceae []

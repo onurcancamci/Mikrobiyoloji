@@ -2,9 +2,9 @@
 
 
 Serverside Core [VIP]
-  -Aramaya Genellemeleri dahil etmeyi ekle []
-  -filtreleme []
-  -Ve yada veya filtreleri []
+  +filtreleme
+  +Ve yada veya filtreleri
+  -BakteriId > Bakteri Indexi
 
 Clientside Core []
 UI i ayirmak []
@@ -15,7 +15,7 @@ meteor ile bastan yazma []
 
 
 //ozellikler
-
+Aramaya Genellemeleri dahil etmeyi ekle []
 
 Karsilastirma Ozelligi []
 Favori Ekleme []
