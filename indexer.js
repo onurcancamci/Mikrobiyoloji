@@ -116,19 +116,6 @@ let ConstructIndex = function (bakteriler = Bakteriler) {
 
 //onurcan.querySelector(`#${Bakteriler[0]._HTML}`).parentElement.style.display = "block";
 
-let StringIngAlfabe = function (text) {
-  let ntext = "";
-  for(let k = 0; k < text.length; k++) {
-    if(text[k] == "ç") ntext += "c";
-    else if(text[k] == "ö") ntext += "o";
-    else if(text[k] == "ğ") ntext += "g";
-    else if(text[k] == "ü") ntext += "u";
-    else if(text[k] == "ş") ntext += "s";
-    else if(text[k] == "ı") ntext += "i";
-    else ntext += text[k];
-  }
-  return ntext;
-}
 
 
 let SearchIndex = {};
@@ -146,8 +133,11 @@ let StringEkleSearch = function (Val, Bakteri, Field) {
   if(typeof SearchIndex[GetBakteriID(Bakteri)] == "undefined") {
     SearchIndex[GetBakteriID(Bakteri)] = [];
   }
-  //baska diller de ekle
-  SearchIndex[GetBakteriID(Bakteri)].push(StringIngAlfabe(Sozluk(Val)).toLowerCase());
+  let kelimeler = StringIngAlfabe(Sozluk(Val,true));
+  for(let k of kelimeler) {
+    SearchIndex[GetBakteriID(Bakteri)].push(k.toLowerCase());
+  }
+  
   
 }
 let ArrayEkleSearch = function (Val, Bakteri, Field) {
@@ -157,8 +147,6 @@ let ArrayEkleSearch = function (Val, Bakteri, Field) {
 }
 let ObjRouterSearch = function (Val, Bakteri, Field) {
   if(Field[0] == "_") return;
-  //if(!IndexFieldFilter(Field,Path)) return;
-  
   
   if(typeof Val == "string") {
     StringEkleSearch(Val, Bakteri, Field);
@@ -172,6 +160,7 @@ let ObjRouterSearch = function (Val, Bakteri, Field) {
 }
 let BakteriRouterSearch = function (Bakteri) {
   for(let Field in Bakteri) {
+    if(Field[0] != "_")
     ObjRouterSearch(Bakteri[Field], Bakteri, Field);
   }
 }
