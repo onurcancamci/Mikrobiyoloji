@@ -111,7 +111,7 @@ let Dil = {
     [`Kontamine Besin`] : `#`,
   } 
 }
-let Sozluk = function (kelime, multiLanguage = false, language = "Turkce") {
+let Sozluk = function (kelime, multiLanguage = false, language = "Turkce", Debug = false) {
   if(multiLanguage) {
     let arr = [];
     for(dict in Dil) {
