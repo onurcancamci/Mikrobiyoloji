@@ -1,7 +1,19 @@
 
-const {Helpers} = require('./helpers.js');
+const {Helpers, DBH} = require('./helpers.js');
 const md5 = require('js-md5');
 const {Dil,Genelleme} = require("./language.js");
+const Locks = {};
+
+global.Lock = (id) => new Promise(res => {
+  Locks[id] = res;
+});
+
+global.Unlock = (id,val) => {
+  if(id in Locks && Locks[id]) {
+    Locks[id](val);
+    Locks[id] = null;
+  }
+}
 
 //index
 //filter
@@ -9,10 +21,10 @@ const {Dil,Genelleme} = require("./language.js");
 //chat
 //args da level, path, layer = 0 gerekli
 //level = "Belirtiler" path = "Hastaliklar/Belirtiler"
-let DoString = function (string, args, job) {
+let DoString = async function (string, args, job) {
   job(string, args);
 }
-let DoArray = function (array, args, job, arrjob, objectjob) {
+let DoArray = async function (array, args, job, arrjob, objectjob) {
   if(arrjob) objectjob(array, args);
   
   for(let n of array) {
@@ -20,7 +32,7 @@ let DoArray = function (array, args, job, arrjob, objectjob) {
   }
   
 }
-let DoObj = function (object, args, job, arrjob, objectjob) {
+let DoObj = async function (object, args, job, arrjob, objectjob) {
   if(objectjob) objectjob(object, args);
   if(object.Name) job(object.Name, args);
   
@@ -35,7 +47,7 @@ let DoObj = function (object, args, job, arrjob, objectjob) {
   
   
 }
-let DoRouter = function (object, args, job, arrjob, objectjob) {
+let DoRouter = async function (object, args, job, arrjob, objectjob) {
   if(typeof object == "string") {
     DoString(object, args, job);
     
@@ -94,7 +106,10 @@ Array.prototype.remove = function(el) {
   }
 };
 
-let WhiteMerge = function (list, arr) {
+let WhiteMerge = async function (list, arr, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
+  }
   if(!arr) {
     list.mark = true;
     for(let k = 0; k < list.length; k++) {
@@ -117,14 +132,20 @@ let WhiteMerge = function (list, arr) {
   }
   return list;
 }
-let BlackMerge = function (list, arr) {
+let BlackMerge = async function (list, arr, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
+  }
   if(!arr) return list;
   for(let e of arr) {
     if(list.findIndex(x => x == e) == -1) list.push(e);
   }
   return list;
 }
-let WhiteBlackMerge = function (white, black) {
+let WhiteBlackMerge = async function (white, black, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
+  }
   for(let k = 0; k < white.length; k++) {
     let e = white[k];
     if(black.findIndex(x => x == e) != -1) {
@@ -135,32 +156,58 @@ let WhiteBlackMerge = function (white, black) {
 }
 
 
-let Core = function (Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubTur"], onlineOnly = false) {
-  this.Objects = [];
-  this.Index = {};
+let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubTur"], online = 0, globalCore = true, type = "bakteriler") {
+  this.name = Name;
+  this.global = globalCore;
+  this.Objects = new Proxy({}, {
+    get: async function (target, prop, reciever) {
+      return await DBH.GetObjectId(prop, type, Name);
+    },
+    set: async function (target, prop, val, reciever) {
+      DBH.SetObject(val, prop, type, Name);
+    }
+  });
+  this.GetFullObject = async function (objid) {
+    return await DBH.GetObject(objid, type, Name)
+  }
+  this.Index = new Proxy({}, {
+    get: async function (target, prop, reciever) {
+      let indpath = await DBH.GetIndexPath(prop, Name);
+      if(!indpath) return null;
+      return indpath.objs;
+    },
+    set: async function (target, prop, val, reciever) {
+      DBH.SetIndexPath({path: prop, objs: val, coreName: Name}, Name);
+      return true;
+    }
+  });
+  this.IndexAdd = async (path, objid) => {
+    DBH.AddObjToIndex(path, objid, Name);
+  }
   this.SearchIndex = {};
-  this.onlineOnly = onlineOnly; 
+  this.online = online;
+  this.type = type;
   
-  this.Ekle = (O) => {
+  
+  this.Ekle = async (O) => {
     O = Arrayify(O);
     for(let o of O) {
-      this.Objects.push(o);
-      DoRouter(O, {
+      let id = this.GetId(o);
+      o._ID = id;
+      o._MD5 = md5(o);
+      this.Objects[id] = o;
+      DoRouter(o, {
         level: "root",
         path: "root",
         layer: 0,
-        Index: this.Index,
-        Object: O,
-      },(string, args) => {
-        NDEF(args.Index,args.path,{});
-        NDEF(args.Index[args.path],string,[]);
-        args.Index[args.path][string].push(args.Object);
+        Object: await this.Objects[id],// id olcak
+      },async (string, args) => {
+        this.IndexAdd(args.path+"/"+string, args.Object);
       });
     }
-    
+    /*
     for(let o of O) {
-      let id = this.GetId(o);
-      o._id = id;
+      let id = o._ID;
       DoRouter(O, {
         level: "root",
         path: "root",
@@ -177,16 +224,11 @@ let Core = function (Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubT
         }
       });
     }
-  
+    */
   }
   this.Remove = (Oid) => {
-    let O = this.Objects.find(o => o._id == Oid);
-    if(this.SearchIndex[Oid]) delete this.SearchIndex[Oid];
-    for(let field in this.Index) {
-      for(let names in this.Index[field]) {
-        this.Index[field][names].remove(O);
-      }
-    }
+    DBH.RemoveObject(Oid, type, Name);
+    //if(this.SearchIndex[Oid]) delete this.SearchIndex[Oid];
   }
   
   
@@ -225,39 +267,38 @@ let Core = function (Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubT
   }
   //0 = normal, 1 = whitelist, 2 = blacklist, 3 = orlist
   //{path: "root/Hastaliklar/Belirtiler", field: "Ates", status: 1}
-  this.Filter = (rules, send, online, count, page) => {
+  //count -1 = all
+  this.Filter = async (rules, send, count = -1, page) => {
     let white = [];
     let black = [];
     let orlist = {};
     
-    for(let rule of rules) {
-      if(rule.status == 0) continue;
-      //white
-      if(rule.status == 1) {
-        WhiteMerge(white, this.Index[rule.path][rule.field]);
-      } else if(rule.status == 2) {
-        BlackMerge(black, this.Index[rule.path][rule.field]);
+    for(let k = 0; k < rules.length; k++) {
+      if(rules[k].status == 0) {
+        continue;
+      }
+      if(rules[k].status == 1) {
+        await WhiteMerge(white, rules[k].path+"/"+rules[k].field, this.Index);
+      } else if(rules[k].status == 2) {
+        await BlackMerge(black, rules[k].path+"/"+rules[k].field, this.Index);
       } else {
-        NDEF(orlist, rule.path, []);
-        BlackMerge(orlist[rule.path], this.Index[rule.path][rule.field]);
+        NDEF(orlist, rules[k].path, []);
+        await BlackMerge(orlist[rules[k].path], rules[k].path+"/"+rules[k].field, this.Index);
       }
     }
-    
     for(let p in orlist) {
-      WhiteMerge(white,orlist[p]);
+      await WhiteMerge(white,orlist[p]);
     }
+    await WhiteBlackMerge(white,black);
     
-    WhiteBlackMerge(white,black);
-    
-    if(online || this.onlineOnly) {
+    if(count != -1) {
       offset = page * count;
       white = white.filter((e,i,arr) => {
         if(i < offset || i >= offset + count) return false;
         return true;
       });
     }
-    send(white,online);
-    
+    send(white, count, page);
   }
   //online icin {id,hash} gonder, client istediklerini yollar, normal obje gider
   //bunu filter fonksiyonu kullanir sadece
@@ -270,8 +311,7 @@ let Core = function (Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubT
   
   
   
-  if(!onlineOnly)
-    this.MD5 = md5(JSON.stringify(this.Objects));
+  
   
 }
 
@@ -298,18 +338,29 @@ let cBurnetii = {
   Aciklama : ["Zorunlu Hucre Ici","Fagolizozomlarda Yasar","Cevre Sartlarina Cok Direnclidir"],
 };
 
-let core = new Core(Dil,Genelleme,["CinsAdi", "TurAdi", "SubTur"], false);
+DBH.onConnected.push(async () => {
+  let core = new Core("Bakteriler#Global", Dil,Genelleme,["CinsAdi", "TurAdi", "SubTur"], 0);
+  await core.Filter([{path:"root/Gram",field: "Negative", status: 1},
+                {path:"root/Gram",field: "Positive", status: 2},
+              ],(x) => console.log(), false);
+  await core.Ekle(cBurnetii);
+  //await DBH.RemoveObject("Coxiella-burnetii", core.type, core.name);
+  /*await new Promise(res => setTimeout(x => {
+    
+    setTimeout(x => console.log("bitti"),1000);
+  },1000));*/
+  //DBH.RemoveFromIndex("596ccca4984ace5d480a1e22", "596bde0bf951ce3b3e95a935");
+  //DBH.RemoveIndexPath("root/AileAdi/Coxiellaceae", core.name);
+});
+
+
 //console.log(core.GetId(cBurnetii));
-core.Ekle(cBurnetii);
+
 //core.Remove(core.GetId(cBurnetii));
 //console.log(core.Index);
 
-core.Filter([{path:"root/Gram",field: "Negative", status: 1},
-              {path:"root/Gram",field: "Positive", status: 2},
-              {path:"root/Solunum",field: "Fakultatif_Anaerob", status: 1},
-              {path:"root/Solunum",field: "Aerob", status: 1}
-              ],(x) => console.log(x), false);
-
+/*
+*/
 
 
 
