@@ -50,7 +50,7 @@ let dbConnect = async function(err, db) {
   console.log("Connected");
   DB = db;
   
-  ["bakteriler","indexPaths","cores","searchIndexes"].map(c => {
+  ["bakteriler","indexPaths","cores","searchIndexes", "localCores"].map(c => {
     db.createCollection(c);
     Collections[c] = db.collection(c);
   });
@@ -95,11 +95,15 @@ DBH.CreateCore = async function (name, globalStatus, online, type) {
   entry.global = globalStatus;
   entry.online = online;
   entry.type = type;
+  entry.version = 0;
   if(CommandQ.push({col:"cores", comm:"findOne", args:[{name:name}]})) {
     //CommandQ.push({col:"cores",comm:"updateOne",args:[{name:core.name},entry]});
   } else {
     await CommandQ.push({col:"cores",comm:"insertOne",args:[entry]});
   }
+}
+DBH.IncrementVersion = async function (coreName) {
+  CommandQ.push({col: "cores", comm: "updateOne", args: [{name: coreName}, {$inc: {version: 1}}]});
 }
 
 DBH.GetIndexPath = async function (pathfield, coreName) {
@@ -150,10 +154,12 @@ DBH.SetObject = async function (obj, objid, type, coreName) {
   let id = await CommandQ.push({col:"cores", comm:"findOne", args:[{name: coreName},{[`objs.${objid}`] : 1}]});
   if(typeof id.objs[objid] === "undefined") {
     let insid = (await CommandQ.push({col:type, comm:"insertOne", args: [obj]})).insertedId;
-    CommandQ.push({col:"cores", comm: "updateOne", args: [{name: coreName}, {$set: {[`objs.${objid}`]: insid}}]}); //await?
+    await CommandQ.push({col:"cores", comm: "updateOne", args: [{name: coreName}, {$set: {[`objs.${objid}`]: insid}}]}); //await?
+    return insid;
   } else {
     id = id.objs[objid];
-    CommandQ.push({col: type, comm: "updateOne", args: [{_id: ObjectID(id)}, obj] });//await?
+    await CommandQ.push({col: type, comm: "updateOne", args: [{_id: ObjectID(id)}, obj] });//await?
+    return id;
   }
 }
 DBH.GetObject = async function (objid, type, coreName) {
@@ -181,9 +187,202 @@ DBH.RemoveObject = async function (objid, type, coreName) {
     await CommandQ.push({col: "indexPaths", comm: "updateMany", args: [{coreName: coreName, objs: id}, {$pull: {objs: id}}] });
     await CommandQ.push({col: "cores", comm: "updateOne", args: [{name: coreName}, {$unset: {[`objs.${objid}`]: ""}} ] });
     await CommandQ.push({col: type, comm: "deleteOne", args: [{_id: ObjectID(id)}] });
-    
+    DBH.RemoveSearchTextObjid(id, coreName, type);
   }
 }
+DBH.CheckObject = async function (onurid, newHash, type, coreName) {
+  let id = await CommandQ.push({col:"cores", comm:"findOne", args:[{name: coreName},{[`objs.${onurid}`] : 1}]});
+  if(typeof id.objs[onurid] === "undefined") {
+    return false;
+  } else {
+    id = id.objs[onurid];
+    let res = await CommandQ.push({col:type, comm:"findOne", args: [{_id: ObjectID(id)}, {_hash : 1}]});
+    return res._hash == newHash;
+  }
+}
+
+DBH.SearchText = async function (text, coreName, lang = "") {
+  let langOp = lang !== "" ? "dil" : "dummy";
+  let langVal = lang !== "" ? lang : 1;
+  let regexp = new RegExp(`.*${text}.`);
+  let result = await CommandQ.push({col: "cores", comm: "aggregate", args: [[
+    {$match: {name: coreName}},
+    {$project: {searchIndex: 1}},
+    {$unwind: {
+      path: "$searchIndex",
+      preserveNullAndEmptyArrays: true
+    }},
+    {$lookup: {
+      from: "searchIndexes",
+      localField: "searchIndex",
+      foreignField: "_id",
+      as: "value"
+    }},
+    {$unwind: "$value"},
+    {$match: {[`value.${langOp}`]: langVal}},
+    {$match: {[`value.arr`]: regexp}},
+    {$project: {[`value.obj`]: 1}},
+    {$group: {
+      _id: null,
+      objects: {$push: "$value.obj"},
+    }},
+    
+  ]]});
+  let resArr = await result.next();
+  if(resArr == null) return null;
+  return resArr.objects;
+}
+DBH.SetSearchText = async function (arr, onurid, dil, coreName, type) {
+  let objid = await DBH.GetObjectId(onurid, type, coreName);
+  if(objid == null) return null;
+  let dilobj = {dil: dil, arr: arr, obj: objid, dummy: 1};
+  let result = await CommandQ.push({col: "cores", comm: "aggregate", args: [[
+    {$match: {name: coreName}},
+    {$project: {searchIndex: 1}},
+    {$unwind: {
+      path: "$searchIndex",
+      preserveNullAndEmptyArrays: true
+    }},
+    {$lookup: {
+      from: "searchIndexes",
+      localField: "searchIndex",
+      foreignField: "_id",
+      as: "value"
+    }},
+    {$match: {[`value.obj`] : objid, [`value.dil`]: dil}},
+    {$project: {[`value._id`]: 1}},
+  ]]});
+  let resArr = await result.next();
+  if(resArr == null) {
+    let insid = (await CommandQ.push({col:"searchIndexes", comm:"insertOne", args: [dilobj]})).insertedId;
+    CommandQ.push({col:"cores", comm: "updateOne", args: [{name: coreName}, {$push: {[`searchIndex`]: insid}}]});
+  } else {
+    let index = resArr.value[0]._id;
+    CommandQ.push({col: "searchIndexes", comm: "updateOne", args: [{_id: ObjectID(index)}, dilobj] });
+  }
+}
+DBH.SetSearchTextObjid = async function (arr, objid, dil, coreName, type) {
+  let dilobj = {dil: dil, arr: arr, obj: objid, dummy: 1};
+  let result = await CommandQ.push({col: "cores", comm: "aggregate", args: [[
+    {$match: {name: coreName}},
+    {$project: {searchIndex: 1}},
+    {$unwind: {
+      path: "$searchIndex",
+      preserveNullAndEmptyArrays: true
+    }},
+    {$lookup: {
+      from: "searchIndexes",
+      localField: "searchIndex",
+      foreignField: "_id",
+      as: "value"
+    }},
+    {$match: {[`value.obj`] : objid, [`value.dil`]: dil}},
+    {$project: {[`value._id`]: 1}},
+  ]]});
+  let resArr = await result.next();
+  if(resArr == null) {
+    let insid = (await CommandQ.push({col:"searchIndexes", comm:"insertOne", args: [dilobj]})).insertedId;
+    CommandQ.push({col:"cores", comm: "updateOne", args: [{name: coreName}, {$push: {[`searchIndex`]: insid}}]});
+  } else {
+    let index = resArr.value[0]._id;
+    CommandQ.push({col: "searchIndexes", comm: "updateOne", args: [{_id: ObjectID(index)}, dilobj] });
+  }
+}
+//bakteriyi siler search indexten
+DBH.RemoveSearchText = async function (onurid, dil, coreName, type) {
+  let objid = await DBH.GetObjectId(onurid, type, coreName);
+  if(objid == null) return null;
+  let id = await CommandQ.push({col: "searchIndexes", comm: "findOne", args: [{dil: dil, obj: objid}, {[`_id`]: 1}]});
+  if(id != null) {
+    id = id._id;
+  } else {
+    return null;
+  }
+  await CommandQ.push({col: "cores", comm: "updateOne", args:[{name: coreName},{$pull: {[`searchIndex`]: id}}]});
+  CommandQ.push({col:"searchIndexes", comm:"deleteOne", args: [{_id: ObjectID(id)}]});
+}
+DBH.RemoveSearchTextObjid = async function (objid, coreName, type) {
+  let rec = async function (objid, coreName, type) {
+    let id = await CommandQ.push({col: "searchIndexes", comm: "findOne", args: [{obj: objid}, {[`_id`]: 1}]});
+    if(id != null) {
+      id = id._id;
+    } else {
+      return null;
+    }
+    await CommandQ.push({col: "cores", comm: "updateOne", args:[{name: coreName},{$pull: {[`searchIndex`]: id}}]});
+    await CommandQ.push({col:"searchIndexes", comm:"deleteOne", args: [{_id: ObjectID(id)}]});
+    return true;
+  }
+  
+  let result = true;
+  while(result) {
+    await rec(objid, coreName, type);
+  }
+  
+}
+
+DBH.ObjidToOnurid = async function (objidArr, coreName, type) {
+  let onurids = [];
+  for(let objid of objidArr) {
+    onurids.push((await CommandQ.push({col: type, comm: "findOne", args: [{_id: ObjectID(objid)}, {_ID: 1}]}))._ID);
+  }
+  return onurids;
+}
+DBH.BackUpCore = async function (coreName, type) {
+  let regexp = new RegExp(`.*root.`);
+  let result = await CommandQ.push({col: "cores", comm: "aggregate", args: [[
+    {$match: {name: coreName}},
+    {$lookup: {
+      from: "searchIndexes",
+      localField: "searchIndex",
+      foreignField: "_id",
+      as: "searchIndex"
+    }},
+    {$addFields: {index: {$objectToArray: "$index"}}}, 
+    {$lookup: {
+      from: "indexPaths",
+      localField: "index.v",
+      foreignField: "_id",
+      as: "index"
+    }},
+    {$addFields: {objs: {$objectToArray: "$objs"}}}, 
+    {$lookup: {
+      from: type,
+      localField: "objs.v",
+      foreignField: "_id",
+      as: "objs"
+    }},
+    {$project: {
+      [`_id`]: 0,
+      [`index.coreName`]: 0, 
+      [`index._id`]: 0, 
+      [`searchIndex._id`]: 0, 
+      [`searchIndex.dummy`]: 0,
+    }},
+  ]]});
+  let resArr = await result.next();
+  if(resArr == null) {
+    return null;
+  }
+  let nind = {};
+  for(let k = 0; k < resArr.index.length; k++) {
+    nind[resArr.index[k].path] = resArr.index[k].objs;
+  }
+  resArr.index = nind;
+  
+  let nobjs = {};
+  for(let k = 0; k < resArr.objs.length; k++) {
+    nobjs[resArr.objs[k]._id] = resArr.objs[k];
+  }
+  resArr.objs = nobjs;
+  
+  await CommandQ.push({col: "localCores", comm: "updateOne", args:[{name: coreName}, resArr, {upsert:true}]});
+  
+}
+DBH.GetBackUp = async function (coreName) {
+  return await CommandQ.push({col: "localCores", comm: "findOne", args: [{name: coreName}]});
+}
+
 
 DBH.Close = async function () {
   await DB.close();
@@ -212,9 +411,7 @@ Helpers.MergeArrays = function (arr1, arr2) {
 
 
 
-//CommandQ.push({name:"adf"});
 
-//setTimeout(() => CommandQ.push({name:"adf2"}), 2000);
 
 
 

@@ -59,6 +59,45 @@ let DoRouter = async function (object, args, job, arrjob, objectjob) {
   }
 }
 
+let DoStringSync = function (string, args, job) {
+  job(string, args);
+}
+let DoArraySync = function (array, args, job, arrjob, objectjob) {
+  if(arrjob) objectjob(array, args);
+  
+  for(let n of array) {
+    DoRouterSync(n, args, job, arrjob, objectjob);
+  }
+  
+}
+let DoObjSync = function (object, args, job, arrjob, objectjob) {
+  if(objectjob) objectjob(object, args);
+  if(object.Name) job(object.Name, args);
+  
+  for(let field in object) {
+    if(field == "Name" || field[0] == "_") continue;
+    let nargs = Helpers.ShallowCopy(args);
+    nargs.level = field;
+    nargs.path += `/${field}`;
+    nargs.layer++;
+    DoRouterSync(object[field], nargs, job, arrjob, objectjob);
+  }
+  
+  
+}
+let DoRouterSync = function (object, args, job, arrjob, objectjob) {
+  if(typeof object == "string") {
+    DoStringSync(object, args, job);
+    
+  } else if(Array.isArray(object)) {
+    DoArraySync(object, args, job, arrjob, objectjob);
+    
+  } else if(typeof object == "object") {
+    DoObjSync(object, args, job, arrjob, objectjob);
+  }
+}
+
+
 let Arrayify = function (O) {
   if(!Array.isArray(O)) return [O];
   else return O;
@@ -155,10 +194,15 @@ let WhiteBlackMerge = async function (white, black, index) {
   }
 }
 
-
+//0 = normal, 1 = whitelist, 2 = blacklist, 3 = orlist
+//{path: "root/Hastaliklar/Belirtiler", field: "Ates", status: 1}
+//count -1 = all
 let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubTur"], online = 0, globalCore = true, type = "bakteriler") {
   this.name = Name;
   this.global = globalCore;
+  this.online = online;
+  this.type = type;
+  
   this.Objects = new Proxy({}, {
     get: async function (target, prop, reciever) {
       return await DBH.GetObjectId(prop, type, Name);
@@ -167,9 +211,6 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
       DBH.SetObject(val, prop, type, Name);
     }
   });
-  this.GetFullObject = async function (objid) {
-    return await DBH.GetObject(objid, type, Name)
-  }
   this.Index = new Proxy({}, {
     get: async function (target, prop, reciever) {
       let indpath = await DBH.GetIndexPath(prop, Name);
@@ -184,56 +225,16 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
   this.IndexAdd = async (path, objid) => {
     DBH.AddObjToIndex(path, objid, Name);
   }
-  this.SearchIndex = {};
-  this.online = online;
-  this.type = type;
-  
-  
-  this.Ekle = async (O) => {
-    O = Arrayify(O);
-    for(let o of O) {
-      let id = this.GetId(o);
-      o._ID = id;
-      o._MD5 = md5(o);
-      this.Objects[id] = o;
-      DoRouter(o, {
-        level: "root",
-        path: "root",
-        layer: 0,
-        Object: await this.Objects[id],// id olcak
-      },async (string, args) => {
-        this.IndexAdd(args.path+"/"+string, args.Object);
-      });
-    }
-    /*
-    for(let o of O) {
-      let id = o._ID;
-      DoRouter(O, {
-        level: "root",
-        path: "root",
-        layer: 0,
-        Index: this.SearchIndex,
-        id: id,
-        Dil: Dil,
-      },(string, args) => {
-        NDEF(args.Index,args.id,{});
-        for(let lang in args.Dil) {
-          if(lang[0] == "_")continue;
-          NDEF(args.Index[args.id],lang,[]);
-          args.Index[args.id][lang].push(S2ENG(args.Dil._Sozluk(string,false,lang).toLowerCase()));
-        }
-      });
-    }
-    */
-  }
-  this.Remove = (Oid) => {
-    DBH.RemoveObject(Oid, type, Name);
-    //if(this.SearchIndex[Oid]) delete this.SearchIndex[Oid];
+  this._AddObject = async function (onurid, obj) {
+    return await DBH.SetObject(obj, onurid, type, Name);
   }
   
-  
-  
-  
+  this._DBChanged = async () => {
+    await DBH.IncrementVersion(Name);
+    if(online != 2) {
+      await DBH.BackUpCore(Name, type);
+    }
+  }
   this.GetIdFull = function (IdFields, B) {
     let id = "";
     
@@ -251,23 +252,53 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
     return id;
   }
   this.GetId = this.GetIdFull.bind(null, IdFields);
-  this.GetCounter = (fields = ["CinsAdi"]) => {
-    if(typeof fields === "string") fields = [fields];
-    let ctind = {};
-    
-    for(let o of Objs) {
-      let id = this.GetIdFull(fields, o);
-      if(typeof ctind[id] === "undefined") ctind[id] = 0;
+  
+  this.Ekle = async (O) => {
+    O = Arrayify(O);
+    let didChange = false;
+    for(let o of O) {
+      let id = this.GetId(o);
+      let hash = md5(o);
+      let dogrulama = await DBH.CheckObject(id, hash, type, Name); if(dogrulama) continue;
+      didChange = true;
+      o._ID = id;
+      o._hash = hash;
+      let objid = await this._AddObject(id, o);
+      DoRouter(o, {
+        level: "root",
+        path: "root",
+        layer: 0,
+        Object: objid,// id olcak
+      },async (string, args) => {
+        this.IndexAdd(args.path+"/"+string, args.Object);
+      });
       
-      ctind[id]++;
+      let langs = {};
+      DoRouterSync(O, {
+        level: "root",
+        path: "root",
+        layer: 0,
+      },(string, args) => {
+        for(let lang in Dil) {
+          if(lang[0] == "_")continue;
+          NDEF(langs,lang,[]);
+          langs[lang].push(S2ENG(Dil._Sozluk(string,false,lang).toLowerCase()));
+        }
+      });
+      for(let lang in langs) {
+        DBH.SetSearchTextObjid(langs[lang], objid, lang, Name, type);
+      }
+      
       
     }
+    if(didChange) this._DBChanged();
     
-    return ctind;
   }
-  //0 = normal, 1 = whitelist, 2 = blacklist, 3 = orlist
-  //{path: "root/Hastaliklar/Belirtiler", field: "Ates", status: 1}
-  //count -1 = all
+  this.Remove = async (Oid) => {
+    DBH.RemoveObject(Oid, type, Name);
+    this._DBChanged();
+  }
+  
   this.Filter = async (rules, send, count = -1, page) => {
     let white = [];
     let black = [];
@@ -298,20 +329,52 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
         return true;
       });
     }
+    white = await DBH.ObjidToOnurid(white, Name, type);
     send(white, count, page);
   }
-  //online icin {id,hash} gonder, client istediklerini yollar, normal obje gider
-  //bunu filter fonksiyonu kullanir sadece
-  //olumlu bos ise hepsi,
-  //send buraya object send fonksiyonu olarak gelir
-  //fonksiyonun kendisi hash gonderip alir
-  //list obje icerir
-  
-  
-  
-  
-  
-  
+  this.Search = async (text, send, lang = "", count = -1, page) => {
+    //lang i bol sadece secili dillerde arama
+    
+    text = S2ENG(text.toLowerCase());
+    
+    let white = await DBH.SearchText(text, Name, lang);
+    if(white == null) {
+      send(white, count, page);
+      return null;
+    }
+    if(count != -1) {
+      offset = page * count;
+      white = white.filter((e,i,arr) => {
+        if(i < offset || i >= offset + count) return false;
+        return true;
+      });
+    }
+    white = await DBH.ObjidToOnurid(white, Name, type);
+    send(white, count, page);
+  }
+  this.GetLocalCopy = async function () {
+    if(online != 2) {
+      return await DBH.GetBackUp(Name);
+    }
+    return null;
+  }
+  this.GetFullObject = async function (objid) {
+    return await DBH.GetObject(objid, type, Name)
+  }
+  this.GetCounter = (fields = ["CinsAdi"]) => {
+    if(typeof fields === "string") fields = [fields];
+    let ctind = {};
+    
+    for(let o of Objs) {
+      let id = this.GetIdFull(fields, o);
+      if(typeof ctind[id] === "undefined") ctind[id] = 0;
+      
+      ctind[id]++;
+      
+    }
+    
+    return ctind;
+  }
   
 }
 
@@ -340,27 +403,17 @@ let cBurnetii = {
 
 DBH.onConnected.push(async () => {
   let core = new Core("Bakteriler#Global", Dil,Genelleme,["CinsAdi", "TurAdi", "SubTur"], 0);
-  await core.Filter([{path:"root/Gram",field: "Negative", status: 1},
+  
+  //DBH.SetSearchText(["123","456","888"], "Coxiella-burnetii", "Almanca", core.name, core.type);
+  /*await core.Filter([{path:"root/Gram",field: "Negative", status: 1},
                 {path:"root/Gram",field: "Positive", status: 2},
-              ],(x) => console.log(), false);
-  await core.Ekle(cBurnetii);
-  //await DBH.RemoveObject("Coxiella-burnetii", core.type, core.name);
-  /*await new Promise(res => setTimeout(x => {
-    
-    setTimeout(x => console.log("bitti"),1000);
-  },1000));*/
-  //DBH.RemoveFromIndex("596ccca4984ace5d480a1e22", "596bde0bf951ce3b3e95a935");
-  //DBH.RemoveIndexPath("root/AileAdi/Coxiellaceae", core.name);
+              ],(x) => console.log());*/
+  //await core.Ekle(cBurnetii);
+  //await core.Search("Ateş", (x) => console.log(x));
+  //core.Remove("Coxiella-burnetii");
 });
 
 
-//console.log(core.GetId(cBurnetii));
-
-//core.Remove(core.GetId(cBurnetii));
-//console.log(core.Index);
-
-/*
-*/
 
 
 
