@@ -1,39 +1,239 @@
 
-//server tarafli
+const {Helpers, DBH} = require('./helpers.js');
+const md5 = require('js-md5');
+const {Dil,Genelleme} = require("./language.js");
+const Locks = {};
 
+global.Lock = (id) => new Promise(res => {
+  Locks[id] = res;
+});
 
-
-
-let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "TurAdi", "SubTur"]) {
-  this.Index = new Index(Objs, Genelleme);
-  this.Ekle = function (B) {
-    this.Index._Ekle(B);
-    this.SearchIndex._Ekle(B);
+global.Unlock = (id,val) => {
+  if(id in Locks && Locks[id]) {
+    Locks[id](val);
+    Locks[id] = null;
   }
-  this.Remove = function (B) {
-    this.Index._Remove(B);
-    this.SearchIndex._Remove(B);
+}
+
+//index
+//filter
+//search
+//chat
+//args da level, path, layer = 0 gerekli
+//level = "Belirtiler" path = "Hastaliklar/Belirtiler"
+let DoString = async function (string, args, job) {
+  job(string, args);
+}
+let DoArray = async function (array, args, job, arrjob, objectjob) {
+  if(arrjob) objectjob(array, args);
+  
+  for(let n of array) {
+    DoRouter(n, args, job, arrjob, objectjob);
   }
-  this.Update = function (B) {
-    this.Index._Update(B);
-    this.SearchIndex._Update(B);
+  
+}
+let DoObj = async function (object, args, job, arrjob, objectjob) {
+  if(objectjob) objectjob(object, args);
+  if(object.Name) job(object.Name, args);
+  
+  for(let field in object) {
+    if(field == "Name" || field[0] == "_") continue;
+    let nargs = Helpers.ShallowCopy(args);
+    nargs.level = field;
+    nargs.path += `/${field}`;
+    nargs.layer++;
+    DoRouter(object[field], nargs, job, arrjob, objectjob);
   }
-  let StringRemoveAt = function(all, index) {
-    let newall = "";
-    all.split("-").map((e,i,arr) => {
-      if(i != index) {
-        newall += e;
+  
+  
+}
+let DoRouter = async function (object, args, job, arrjob, objectjob) {
+  if(typeof object == "string") {
+    DoString(object, args, job);
+    
+  } else if(Array.isArray(object)) {
+    DoArray(object, args, job, arrjob, objectjob);
+    
+  } else if(typeof object == "object") {
+    DoObj(object, args, job, arrjob, objectjob);
+  }
+}
+
+let Arrayify = function (O) {
+  if(!Array.isArray(O)) return [O];
+  else return O;
+}
+let NDEF = function (O,field,def = {}) {
+  if(typeof O[field] === "undefined") {
+    O[field] = def;
+  }
+}
+let _S2ENG = function (text) {
+  let ntext = "";
+  for(let k = 0; k < text.length; k++) {
+    if(text[k] == "ç") ntext += "c";
+    else if(text[k] == "ö") ntext += "o";
+    else if(text[k] == "ğ") ntext += "g";
+    else if(text[k] == "ü") ntext += "u";
+    else if(text[k] == "ş") ntext += "s";
+    else if(text[k] == "ı") ntext += "i";
+    else ntext += text[k];
+  }
+  return ntext;
+}
+let S2ENG = function (text) {
+
+  if(Array.isArray(text)) {
+  let arr = [];  
+  for(let t of text) {
+    arr.push(_S2ENG(t));
+  }
+  return arr;
+    
+  } else {
+    return _S2ENG(text);
+  }
+  
+  
+}
+Array.prototype.remove = function(el) {
+  let ind = this.findIndex(e => e == el);
+  
+  if(ind != -1) {
+    return this.splice(ind,1);
+  } else {
+    return this;
+  }
+};
+
+let WhiteMerge = async function (list, arr, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
+  }
+  if(!arr) {
+    list.mark = true;
+    for(let k = 0; k < list.length; k++) {
+      list.splice(k,1);
+      k--;
+    }
+  }
+  if(list.length == 0 && typeof list.mark === "undefined") {
+    arr.map(e => list.push(e));
+    list.mark = true;
+  } else {
+    for(let k = 0; k < list.length; k++) {
+      let e = list[k];
+      let ind = arr.findIndex(x => x == e);
+      if(ind == -1) {
+        list.splice(k,1);
+        k--;
       }
-      if(i != arr.length - 1 && (index == arr.length - 1 && i != arr.length - 2 )) {
-        newall += "-";
-      }
-    });
-    newall.trim();
-    return newall;
+    }
   }
-  let StringRemoveLast = function(all) {
-    return StringRemoveAt(all,all.split("-").length - 1);
+  return list;
+}
+let BlackMerge = async function (list, arr, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
   }
+  if(!arr) return list;
+  for(let e of arr) {
+    if(list.findIndex(x => x == e) == -1) list.push(e);
+  }
+  return list;
+}
+let WhiteBlackMerge = async function (white, black, index) {
+  if(typeof arr == "string") {
+    arr = await index[arr];
+  }
+  for(let k = 0; k < white.length; k++) {
+    let e = white[k];
+    if(black.findIndex(x => x == e) != -1) {
+      white.splice(k,1);
+      k--;
+    }
+  }
+}
+
+
+let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubTur"], online = 0, globalCore = true, type = "bakteriler") {
+  this.name = Name;
+  this.global = globalCore;
+  this.Objects = new Proxy({}, {
+    get: async function (target, prop, reciever) {
+      return await DBH.GetObjectId(prop, type, Name);
+    },
+    set: async function (target, prop, val, reciever) {
+      DBH.SetObject(val, prop, type, Name);
+    }
+  });
+  this.GetFullObject = async function (objid) {
+    return await DBH.GetObject(objid, type, Name)
+  }
+  this.Index = new Proxy({}, {
+    get: async function (target, prop, reciever) {
+      let indpath = await DBH.GetIndexPath(prop, Name);
+      if(!indpath) return null;
+      return indpath.objs;
+    },
+    set: async function (target, prop, val, reciever) {
+      DBH.SetIndexPath({path: prop, objs: val, coreName: Name}, Name);
+      return true;
+    }
+  });
+  this.IndexAdd = async (path, objid) => {
+    DBH.AddObjToIndex(path, objid, Name);
+  }
+  this.SearchIndex = {};
+  this.online = online;
+  this.type = type;
+  
+  
+  this.Ekle = async (O) => {
+    O = Arrayify(O);
+    for(let o of O) {
+      let id = this.GetId(o);
+      o._ID = id;
+      o._MD5 = md5(o);
+      this.Objects[id] = o;
+      DoRouter(o, {
+        level: "root",
+        path: "root",
+        layer: 0,
+        Object: await this.Objects[id],// id olcak
+      },async (string, args) => {
+        this.IndexAdd(args.path+"/"+string, args.Object);
+      });
+    }
+    /*
+    for(let o of O) {
+      let id = o._ID;
+      DoRouter(O, {
+        level: "root",
+        path: "root",
+        layer: 0,
+        Index: this.SearchIndex,
+        id: id,
+        Dil: Dil,
+      },(string, args) => {
+        NDEF(args.Index,args.id,{});
+        for(let lang in args.Dil) {
+          if(lang[0] == "_")continue;
+          NDEF(args.Index[args.id],lang,[]);
+          args.Index[args.id][lang].push(S2ENG(args.Dil._Sozluk(string,false,lang).toLowerCase()));
+        }
+      });
+    }
+    */
+  }
+  this.Remove = (Oid) => {
+    DBH.RemoveObject(Oid, type, Name);
+    //if(this.SearchIndex[Oid]) delete this.SearchIndex[Oid];
+  }
+  
+  
+  
+  
   this.GetIdFull = function (IdFields, B) {
     let id = "";
     
@@ -44,14 +244,13 @@ let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "Tur
       }
     }
     if(id[id.length -1] == "-") {
-      id = StringRemoveLast(id);
+      id = id.slice(0, -1);
     }
     
     
     return id;
   }
   this.GetId = this.GetIdFull.bind(null, IdFields);
-  this.SearchIndex = new SearchIndex(Objs, Dil, this.GetId);
   this.GetCounter = (fields = ["CinsAdi"]) => {
     if(typeof fields === "string") fields = [fields];
     let ctind = {};
@@ -66,309 +265,121 @@ let Core = function (Objs = [], Genelleme = {}, Dil, IdFields = ["CinsAdi", "Tur
     
     return ctind;
   }
-  this.Filter = new Filter(this.GetId, Objs, this.Index);
-}
-
-//bakteri yazsa da alakasiz
-let Index = function (Bakteriler = [], Genelleme) {
-
-  
-  
-  let ObjectEkle = function (Val, Bakteri, Field, Parent, Path) {
-    StringEkle(Val.Name, Bakteri, Field, Parent, Path);
+  //0 = normal, 1 = whitelist, 2 = blacklist, 3 = orlist
+  //{path: "root/Hastaliklar/Belirtiler", field: "Ates", status: 1}
+  //count -1 = all
+  this.Filter = async (rules, send, count = -1, page) => {
+    let white = [];
+    let black = [];
+    let orlist = {};
     
-    for(let subfields in Val) {
-      if(subfields == "Name") {
+    for(let k = 0; k < rules.length; k++) {
+      if(rules[k].status == 0) {
         continue;
       }
-      ObjRouter(Val[subfields],Bakteri, subfields, Parent, Path + "-" + subfields);
-    }
-    
-  }
-  let StringEkle = function (Val, Bakteri, Field, Parent, Path) {
-    
-    let NullCheck = function () {
-      if(!Parent[Path]) {
-        Parent[Path] = {};
-      }
-      if(!Parent[Path][Val]) {
-        Parent[Path][Val] = [];
-      }
-    }
-    
-    
-    let Ekle = function () {
-      NullCheck();
-      if(!Parent[Path][Val].find(x => x == Bakteri)) {
-        Parent[Path][Val].push(Bakteri);
-      }
-    }
-    
-    
-    
-    //Genelleme Yuzunden Karmasik
-    if(typeof Genelleme[Val] != "undefined" && !Array.isArray(Genelleme[Val]) && typeof Genelleme[Val].Genelleme === "undefined") {
-      Ekle();
-    } else if(typeof Genelleme[Val] != "undefined") {
-      let arr;
-      if(!Array.isArray(Genelleme[Val])) {
-        arr = Genelleme[Val].Genelleme;
+      if(rules[k].status == 1) {
+        await WhiteMerge(white, rules[k].path+"/"+rules[k].field, this.Index);
+      } else if(rules[k].status == 2) {
+        await BlackMerge(black, rules[k].path+"/"+rules[k].field, this.Index);
       } else {
-        arr = Genelleme[Val];
-      }
-      for(let v of arr) {
-        Ekle();
-      }
-    } else {
-      Ekle();
-    }
-  }
-  let ArrayEkle = function (Val, Bakteri, Field, Parent, Path) {
-    for(let Vs of Val) {
-      ObjRouter(Vs, Bakteri, Field, Parent, Path);
-    }
-  }
-  let ObjRouter = function (Val, Bakteri, Field, Parent, Path) {
-    if(typeof Val == "string") {
-      StringEkle(Val, Bakteri, Field, Parent, Path);
-      
-    } else if(Array.isArray(Val)) {
-      ArrayEkle(Val, Bakteri, Field, Parent, Path);
-      
-    } else if(typeof Val == "object") {
-      ObjectEkle(Val, Bakteri, Field, Parent, Path);
-    }
-  }
-  let BakteriRouter = function (Bakteri, Parent) {
-    for(let Field in Bakteri) {
-      if(Field[0] != "_")
-      ObjRouter(Bakteri[Field], Bakteri, Field, Parent, Field);
-    }
-  }
-  
-  
-  if(Bakteriler.count != 0) {
-    for(B of Bakteriler) {
-      BakteriRouter(B, this);
-    }
-  }
-  
-  this._Ekle = (B) => {
-    BakteriRouter(B, this);
-  } 
-  
-  this._Remove = (B) => {
-    for(let f in this) {
-      if(f[0] == "_") continue;
-      for(let f2 in this[f]) {
-        if(f2[0] == "_") continue;
-        let ind = this[f][f2].findIndex(x => x == B);
-        if(ind != -1) this[f][f2].splice(ind,1);
+        NDEF(orlist, rules[k].path, []);
+        await BlackMerge(orlist[rules[k].path], rules[k].path+"/"+rules[k].field, this.Index);
       }
     }
-  }
-  
-  this._Update = (B) => {
-    this._Remove(B);
-    this._Ekle(B);
-  }
-  
-}
-
-let SearchIndex = function (Bakteriler = [], Dil ,GetBakteriID) {
-  
-  let Sozluk = Dil._Sozluk;
-  let _StringIngAlfabe = function (text) {
-    let ntext = "";
-    for(let k = 0; k < text.length; k++) {
-      if(text[k] == "ç") ntext += "c";
-      else if(text[k] == "ö") ntext += "o";
-      else if(text[k] == "ğ") ntext += "g";
-      else if(text[k] == "ü") ntext += "u";
-      else if(text[k] == "ş") ntext += "s";
-      else if(text[k] == "ı") ntext += "i";
-      else ntext += text[k];
+    for(let p in orlist) {
+      await WhiteMerge(white,orlist[p]);
     }
-    return ntext;
-  }
-  let StringIngAlfabe = function (text) {
-
-    if(Array.isArray(text)) {
-    let arr = [];  
-    for(let t of text) {
-      arr.push(_StringIngAlfabe(t));
-    }
-    return arr;
-      
-    } else {
-      return _StringIngAlfabe(text);
-    }
+    await WhiteBlackMerge(white,black);
     
-    
-  }
-  
-  let ObjectEkleSearch = function (Val, Bakteri, Field, index) {
-    StringEkleSearch(Val.Name, Bakteri, Field, index);
-    
-    for(let subfields in Val) {
-      ObjRouterSearch(Val[subfields],Bakteri, subfields, index);
+    if(count != -1) {
+      offset = page * count;
+      white = white.filter((e,i,arr) => {
+        if(i < offset || i >= offset + count) return false;
+        return true;
+      });
     }
-    
+    send(white, count, page);
   }
-  let StringEkleSearch = function (Val, Bakteri, Field, index) {
-    
-    if(typeof index[GetBakteriID(Bakteri)] == "undefined") {
-      index[GetBakteriID(Bakteri)] = [];
-    }
-    let kelimeler = StringIngAlfabe(Sozluk(Val,true));
-    for(let k of kelimeler) {
-      index[GetBakteriID(Bakteri)].push(k.toLowerCase());
-    }
-    
-    
-  }
-  let ArrayEkleSearch = function (Val, Bakteri, Field, index) {
-    for(let Vs of Val) {
-      ObjRouterSearch(Vs, Bakteri, Field, index);
-    }
-  }
-  let ObjRouterSearch = function (Val, Bakteri, Field, index) {
-    if(Field[0] == "_") return;
-    
-    if(typeof Val == "string") {
-      StringEkleSearch(Val, Bakteri, Field, index);
-      
-    } else if(Array.isArray(Val)) {
-      ArrayEkleSearch(Val, Bakteri, Field, index);
-      
-    } else if(typeof Val == "object") {
-      ObjectEkleSearch(Val, Bakteri, Field, index);
-    }
-  }
-  let BakteriRouterSearch = function (Bakteri, index) {
-    for(let Field in Bakteri) {
-      if(Field[0] != "_")
-      ObjRouterSearch(Bakteri[Field], Bakteri, Field, index);
-    }
-  }
-  
-  if(Bakteriler.count != 0) {
-    for(B of Bakteriler) {
-      BakteriRouterSearch(B, this);
-    }
-  }
-  
-  this._Ekle = (B) => {
-    BakteriRouterSearch(B, this);
-  } 
-  
-  this._GetBakterilerIdFromText = (text) => {
-    text = StringIngAlfabe(text).toLowerCase();
-    let bakteriler = [];
-    for(let b in this) {
-      if(b[0] == "_") continue;
-      if(this[b].findIndex((e,i,arr) => {
-        return e.includes(text);
-      }) != -1) {
-        bakteriler.push(b);
-      }
-    }
-    return bakteriler;
-  }
-  
-  this._BakteriIceriyorMu = (B, text) => {
-    text = StringIngAlfabe(text).toLowerCase();
-    if(this[GetBakteriID(B)].findIndex((e,i,arr) => {
-      return e.includes(text);
-    }) != -1) {
-      return true;
-    }
-    return false;
-  }
-  
-  this._Remove = (B) => {
-    this[GetBakteriID(B)] = [];
-  }
-  
-  this._Update = (B) => {
-    this._Remove(B);
-    this._Ekle(B);
-  }
-  
-}
-
-let Filter = function (GetBakteriID, Bakteriler, Index) {
-  this.Que = [];//{path = "Hastaliklar-Belirtiler", Val = "ates", status = 1} // 0 = normal, 1 = whitelist, 2 = blacklist, 3 = or whitelist
+  //online icin {id,hash} gonder, client istediklerini yollar, normal obje gider
+  //bunu filter fonksiyonu kullanir sadece
+  //olumlu bos ise hepsi,
+  //send buraya object send fonksiyonu olarak gelir
+  //fonksiyonun kendisi hash gonderip alir
+  //list obje icerir
   
   
   
-  this.AddQue = (Path, Val, Status) => {
-    let Q = this.Que.find(e => e.Path == Path && e.Val == Val);
-    if(Q) {
-      Q.Status = Status;
-    } else {
-      this.Que.push({Path, Val, Status});
-    }
-  }
-  
-  
-  
-  this.Execute = () => {
-    let Q = [];
-    this.Que.map((e,i,arr) => {
-      if(e.Status != 0) {
-        Q.push(e);
-      }
-    });
-    this.Que = Q;
-    let Yey = [];
-    let Nay = [];
-    for(let B of Bakteriler) {
-      let orList = {};
-      let whitelist = true;
-      let blacklist = true;
-      for(let rule of this.Que) {
-        if(whitelist == false || blacklist == false) continue;
-        if(Index[rule.Path][rule.Val].findIndex(e => e == B) == -1) {//bulamadi
-          if(rule.Status == 1) {//whitelist idi
-            whitelist = false;
-          }
-        } else {//buldu
-          if(rule.Status == 2) {//blacklist idi
-            blacklist = false;
-          } else if(rule.Status == 3) {
-            if(typeof orList[Path] === "undefined") orList[Path] = true;
-          }
-        }
-      }
-      let orSonuc = true;
-      for(let o in orList) {
-        if(typeof orList[o] === "undefined") orSonuc = false;
-      }
-      
-      let sonuc = whitelist && blacklist && orList;
-      if(sonuc) Yey.push(B);
-      else Nay.push(B);
-    }
-    return {Yey,Nay};
-  }
   
   
   
   
 }
 
+let cBurnetii = {
+  AileAdi: "Coxiellaceae",
+  CinsAdi: "Coxiella",
+  TurAdi: "burnetii",
+  Gram: "Negative",
+  Shape:  {Name: "Kokobasil", Aciklama: ["Gram Boyasi Ile Zayif Boyanir","Giemsa Ile Iyi Boyanir"]},
+  Solunum: "Aerob",
+  Hareket: "Hareketsiz",
+  KulturOrtami: [{
+    Name: "Axenic Culture"
+  }],
+  Hastaliklar: {
+    Name: "Q Atesi",
+    Belirtiler: ["Ates","Bas Agrisi","Eklem Agrisi","Oksuruk","Dokuntu","Menenjit Bulgulari"],
+    Aciklama: ["Tum Dunyada Yaygin","Insanda Akut Veya Kronik(5%)","Genelde Ciftlik Hayvanlarindan Kaynaklanir",
+                "Cok Bulasici","Lab: Trombositopeni, KC Enzimlerinde Yukselme, Eritrosit Sedimentasyonda Yukselme"],
+                
+  },
+  Bulasma: ["Hava","Damlacik","Oral","Kene"],
+  VirualanFaktorler: "Endospor",
+  Aciklama : ["Zorunlu Hucre Ici","Fagolizozomlarda Yasar","Cevre Sartlarina Cok Direnclidir"],
+};
 
-module.exports = {
-  Core
-}
+DBH.onConnected.push(async () => {
+  let core = new Core("Bakteriler#Global", Dil,Genelleme,["CinsAdi", "TurAdi", "SubTur"], 0);
+  await core.Filter([{path:"root/Gram",field: "Negative", status: 1},
+                {path:"root/Gram",field: "Positive", status: 2},
+              ],(x) => console.log(), false);
+  await core.Ekle(cBurnetii);
+  //await DBH.RemoveObject("Coxiella-burnetii", core.type, core.name);
+  /*await new Promise(res => setTimeout(x => {
+    
+    setTimeout(x => console.log("bitti"),1000);
+  },1000));*/
+  //DBH.RemoveFromIndex("596ccca4984ace5d480a1e22", "596bde0bf951ce3b3e95a935");
+  //DBH.RemoveIndexPath("root/AileAdi/Coxiellaceae", core.name);
+});
+
+
+//console.log(core.GetId(cBurnetii));
+
+//core.Remove(core.GetId(cBurnetii));
+//console.log(core.Index);
+
+/*
+*/
 
 
 
-//console.log(core);
 
 
-//console.log(Bakteriler);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

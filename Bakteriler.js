@@ -1,4 +1,4 @@
-let Bakteriler = [];
+Bakteriler = [];
 
 //obje name kisminda obje kullanma
 //obje name kisminda array kullanma
