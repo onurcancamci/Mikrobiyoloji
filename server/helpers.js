@@ -395,7 +395,7 @@ DBH.User = {
     CommandQ.push({col: "users", comm: "updateOne", args: [{username: user.username},user,{upsert: true}]});
   },
   new: async function (user) {
-    
+    //username ch limit
   }
 }
 
