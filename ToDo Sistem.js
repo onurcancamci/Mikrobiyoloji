@@ -11,7 +11,7 @@
 Aramaya Genellemeleri dahil et [][]
 
 Karsilastirma Ozelligi [][]
-Favori Ekleme [][]
+Favori Ekleme [][]  
 Quizlet tarzi soru cevap [][]
 Kendin sadece sende gorunen not ekleme [✔][]
 
