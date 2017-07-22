@@ -1,7 +1,8 @@
 
 
-
-
+//bugs and fixes
+tum inputlara karakter limiti [][x]
+bize prefixli username
 
 
 //ozellikler

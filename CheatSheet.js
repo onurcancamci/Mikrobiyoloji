@@ -2,6 +2,8 @@
 //bu dosya sayfaya ekli degildir is yapmaz
 //yazim olarak hatalidir sadece kopyala yapistir amaclidir
 
+//°C
+
 Bakteriler.push({
   AileAdi: "",
   CinsAdi: "",

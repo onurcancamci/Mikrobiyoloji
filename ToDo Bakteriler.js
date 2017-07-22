@@ -24,7 +24,7 @@
  
  Beggiatoaceae []
  Brevibacteriaceae []
- Brucellaceae []
+ Brucellaceae [onurcan]
  
  Burkholderiaceae [] //kendim ekledim ismi, boyle bir aile var olmayabilir
  +"B. pseudomallei"

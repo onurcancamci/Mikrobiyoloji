@@ -386,7 +386,7 @@ DBH.GetBackUp = async function (coreName) {
   return await CommandQ.push({col: "localCores", comm: "findOne", args: [{name: coreName}]});
 }
 
-DBH.User = {
+DBH.user = {
   get: async function (args) {
     args = Arrayify(args);
     return await CommandQ.push({col: "users", comm: "findOne", args: args});
@@ -395,8 +395,14 @@ DBH.User = {
     CommandQ.push({col: "users", comm: "updateOne", args: [{username: user.username},user,{upsert: true}]});
   },
   new: async function (user) {
-    //username ch limit
-    
+    user.username = user.username.substring(0,1000);
+    let usrid = (await CommandQ.push({col: "users", comm:"findOne", args: [{username: user.username},{_id: 1}]}));
+    if(usrid == null) {
+      DBH.user.set(user);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
