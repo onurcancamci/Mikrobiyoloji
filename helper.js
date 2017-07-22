@@ -134,6 +134,36 @@ let DebugToggle = function () {
 }
 
 
+let _StringIngAlfabe = function (text) {
+  let ntext = "";
+  for(let k = 0; k < text.length; k++) {
+    if(text[k] == "ç") ntext += "c";
+    else if(text[k] == "ö") ntext += "o";
+    else if(text[k] == "ğ") ntext += "g";
+    else if(text[k] == "ü") ntext += "u";
+    else if(text[k] == "ş") ntext += "s";
+    else if(text[k] == "ı") ntext += "i";
+    else ntext += text[k];
+  }
+  return ntext;
+}
+
+let StringIngAlfabe = function (text) {
+
+  if(Array.isArray(text)) {
+  let arr = [];  
+  for(let t of text) {
+    arr.push(_StringIngAlfabe(t));
+  }
+  return arr;
+    
+  } else {
+    return _StringIngAlfabe(text);
+  }
+  
+  
+}
+
 
 
 
