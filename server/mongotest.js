@@ -76,13 +76,36 @@ let dbConnect = async function(err, db) {
       }
     }
   });
-  
-  console.log(await CommandQ.push({col: "indexPaths", comm: "updateOne", args: [{
-    _id: ObjectID("596d25d5df88692f04566594")
-  },{
-    $pull: {objs: ObjectID("596d25a955fc992e9a390cf4")}
-  }]}));
-  
+  let text = "9";
+  let lang = "";
+  let langOp = lang !== "" ? "dil" : "dummy";
+  let langVal = lang !== "" ? lang : 1;
+  let regexp = new RegExp(`.*${text}.`);
+  let result = await CommandQ.push({col: "cores", comm: "aggregate", args: [[
+    {$match: {name: "Bakteriler#Global"}},
+    {$project: {searchIndex: 1}},
+    {$unwind: {
+      path: "$searchIndex",
+      preserveNullAndEmptyArrays: true
+    }},
+    {$lookup: {
+      from: "searchIndexes",
+      localField: "searchIndex",
+      foreignField: "_id",
+      as: "value"
+    }},
+    {$unwind: "$value"},
+    {$match: {[`value.${langOp}`]: langVal}},
+    {$match: {[`value.arr`]: regexp}},
+    {$project: {[`value.obj`]: 1}},
+    {$group: {
+      _id: null,
+      objects: {$push: "$value.obj"},
+    }},
+    
+  ]]});
+  let resArr = await result.next();
+  console.log(resArr.objects);
 }
 let DBCommandParser = async function (comm) {
   //console.log(Collections);

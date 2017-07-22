@@ -4,6 +4,10 @@ const md5 = require('js-md5');
 const {Dil,Genelleme} = require("./language.js");
 const Locks = {};
 
+const IdFields = {
+  bakteriler: ["CinsAdi", "TurAdi", "SubTur"],
+}
+
 global.Lock = (id) => new Promise(res => {
   Locks[id] = res;
 });
@@ -59,6 +63,45 @@ let DoRouter = async function (object, args, job, arrjob, objectjob) {
   }
 }
 
+let DoStringSync = function (string, args, job) {
+  job(string, args);
+}
+let DoArraySync = function (array, args, job, arrjob, objectjob) {
+  if(arrjob) objectjob(array, args);
+  
+  for(let n of array) {
+    DoRouterSync(n, args, job, arrjob, objectjob);
+  }
+  
+}
+let DoObjSync = function (object, args, job, arrjob, objectjob) {
+  if(objectjob) objectjob(object, args);
+  if(object.Name) job(object.Name, args);
+  
+  for(let field in object) {
+    if(field == "Name" || field[0] == "_") continue;
+    let nargs = Helpers.ShallowCopy(args);
+    nargs.level = field;
+    nargs.path += `/${field}`;
+    nargs.layer++;
+    DoRouterSync(object[field], nargs, job, arrjob, objectjob);
+  }
+  
+  
+}
+let DoRouterSync = function (object, args, job, arrjob, objectjob) {
+  if(typeof object == "string") {
+    DoStringSync(object, args, job);
+    
+  } else if(Array.isArray(object)) {
+    DoArraySync(object, args, job, arrjob, objectjob);
+    
+  } else if(typeof object == "object") {
+    DoObjSync(object, args, job, arrjob, objectjob);
+  }
+}
+
+
 let Arrayify = function (O) {
   if(!Array.isArray(O)) return [O];
   else return O;
@@ -106,11 +149,15 @@ Array.prototype.remove = function(el) {
   }
 };
 
-let WhiteMerge = async function (list, arr, index) {
-  if(typeof arr == "string") {
-    arr = await index[arr];
+let ArrayMerge = function (arr1, arr2) {
+  for(let e of arr2) {
+    if(arr1.findIndex(x => x.toString() == e.toString()) == -1) {
+      arr1.push(e);
+    }
   }
-  if(!arr) {
+}
+let WhiteMerge = function (list, arr) {
+  if(!arr || arr.length == 0) {
     list.mark = true;
     for(let k = 0; k < list.length; k++) {
       list.splice(k,1);
@@ -123,7 +170,7 @@ let WhiteMerge = async function (list, arr, index) {
   } else {
     for(let k = 0; k < list.length; k++) {
       let e = list[k];
-      let ind = arr.findIndex(x => x == e);
+      let ind = arr.findIndex(x => x.toString() == e.toString());
       if(ind == -1) {
         list.splice(k,1);
         k--;
@@ -132,23 +179,17 @@ let WhiteMerge = async function (list, arr, index) {
   }
   return list;
 }
-let BlackMerge = async function (list, arr, index) {
-  if(typeof arr == "string") {
-    arr = await index[arr];
-  }
-  if(!arr) return list;
+let BlackMerge = function (list, arr) {
+  if(!arr || arr.length == 0) return list;
   for(let e of arr) {
-    if(list.findIndex(x => x == e) == -1) list.push(e);
+    if(list.findIndex(x => x.toString() == e.toString()) == -1) list.push(e);
   }
   return list;
 }
-let WhiteBlackMerge = async function (white, black, index) {
-  if(typeof arr == "string") {
-    arr = await index[arr];
-  }
+let WhiteBlackMerge = function (white, black) {
   for(let k = 0; k < white.length; k++) {
     let e = white[k];
-    if(black.findIndex(x => x == e) != -1) {
+    if(black.findIndex(x => x.toString() == e.toString()) != -1) {
       white.splice(k,1);
       k--;
     }
@@ -156,88 +197,38 @@ let WhiteBlackMerge = async function (white, black, index) {
 }
 
 
-let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi", "SubTur"], online = 0, globalCore = true, type = "bakteriler") {
-  this.name = Name;
-  this.global = globalCore;
-  this.Objects = new Proxy({}, {
-    get: async function (target, prop, reciever) {
-      return await DBH.GetObjectId(prop, type, Name);
-    },
-    set: async function (target, prop, val, reciever) {
-      DBH.SetObject(val, prop, type, Name);
+
+let Core = {
+  GetObjectId: async function (coreName, onurid) {
+    return await DBH.GetObjectId(onurid, coreName);
+  },
+  GetObject: async function (coreName, objid) {
+    return await DBH.GetObject(objid, coreName);
+  },
+  SetObject: async function (coreName, obj, onurid) {
+    return await DBH.SetObject(obj, onurid, coreName);
+  },
+  GetIndex: async function (coreName, path) {
+    let indpath = await DBH.GetIndexPath(path, coreName);
+    if(!indpath) return null;
+    return indpath.objs;
+  },
+  SetIndex: async function (coreName, arr, path) {
+    DBH.SetIndexPath({path: path, objs: arr, coreName: coreName}, coreName);
+  },
+  AddObjToIndex: async function (coreName, path, objid) {
+    DBH.AddObjToIndex(path, objid, coreName);
+  },
+  DBChanged: async function (coreName) {
+    await DBH.IncrementVersion(coreName);
+    let online = await DBH.GetCoreField(coreName, "online");
+    if(online != 2) {
+      await DBH.BackUpCore(coreName);
     }
-  });
-  this.GetFullObject = async function (objid) {
-    return await DBH.GetObject(objid, type, Name)
-  }
-  this.Index = new Proxy({}, {
-    get: async function (target, prop, reciever) {
-      let indpath = await DBH.GetIndexPath(prop, Name);
-      if(!indpath) return null;
-      return indpath.objs;
-    },
-    set: async function (target, prop, val, reciever) {
-      DBH.SetIndexPath({path: prop, objs: val, coreName: Name}, Name);
-      return true;
-    }
-  });
-  this.IndexAdd = async (path, objid) => {
-    DBH.AddObjToIndex(path, objid, Name);
-  }
-  this.SearchIndex = {};
-  this.online = online;
-  this.type = type;
-  
-  
-  this.Ekle = async (O) => {
-    O = Arrayify(O);
-    for(let o of O) {
-      let id = this.GetId(o);
-      o._ID = id;
-      o._MD5 = md5(o);
-      this.Objects[id] = o;
-      DoRouter(o, {
-        level: "root",
-        path: "root",
-        layer: 0,
-        Object: await this.Objects[id],// id olcak
-      },async (string, args) => {
-        this.IndexAdd(args.path+"/"+string, args.Object);
-      });
-    }
-    /*
-    for(let o of O) {
-      let id = o._ID;
-      DoRouter(O, {
-        level: "root",
-        path: "root",
-        layer: 0,
-        Index: this.SearchIndex,
-        id: id,
-        Dil: Dil,
-      },(string, args) => {
-        NDEF(args.Index,args.id,{});
-        for(let lang in args.Dil) {
-          if(lang[0] == "_")continue;
-          NDEF(args.Index[args.id],lang,[]);
-          args.Index[args.id][lang].push(S2ENG(args.Dil._Sozluk(string,false,lang).toLowerCase()));
-        }
-      });
-    }
-    */
-  }
-  this.Remove = (Oid) => {
-    DBH.RemoveObject(Oid, type, Name);
-    //if(this.SearchIndex[Oid]) delete this.SearchIndex[Oid];
-  }
-  
-  
-  
-  
-  this.GetIdFull = function (IdFields, B) {
+  },
+  GetOnurID: function (type, B) {
     let id = "";
-    
-    for(let f of IdFields) {
+    for(let f of IdFields[type]) {
       if(typeof B[f] !== "undefined") {
         id += B[f];
         id += "-";
@@ -246,50 +237,105 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
     if(id[id.length -1] == "-") {
       id = id.slice(0, -1);
     }
-    
-    
     return id;
-  }
-  this.GetId = this.GetIdFull.bind(null, IdFields);
-  this.GetCounter = (fields = ["CinsAdi"]) => {
-    if(typeof fields === "string") fields = [fields];
-    let ctind = {};
-    
-    for(let o of Objs) {
-      let id = this.GetIdFull(fields, o);
-      if(typeof ctind[id] === "undefined") ctind[id] = 0;
+  },
+  Ekle: async function (coreName, BS) {
+    BS = Arrayify(BS);
+    let didChange = false;
+    let type = await DBH.GetCoreType(coreName);
+    for(let B of BS) {
+      let onurid = this.GetOnurID(type, B);
+      let hash = md5(B);
+      let dogrulama = await DBH.CheckObject(onurid, hash, type, coreName); if(dogrulama) continue;
+      didChange = true;
+      B._ID = onurid;
+      B._hash = hash;
+      let objid = await this.SetObject(coreName, onurid, B);
+      DoRouter(B, {
+        level: "root",
+        path: "root",
+        layer: 0,
+      },async (string, args) => {
+        this.AddObjToIndex(coreName, args.path+"/"+string, objid);
+      });
       
-      ctind[id]++;
+      let langs = {};
+      DoRouterSync(B, {
+        level: "root",
+        path: "root",
+        layer: 0,
+      },(string, args) => {
+        for(let lang in Dil) {
+          if(lang[0] == "_")continue;
+          NDEF(langs,lang,[]);
+          langs[lang].push(S2ENG(Dil._Sozluk(string,false,lang).toLowerCase()));
+        }
+      });
+      for(let lang in langs) {
+        DBH.SetSearchTextObjid(langs[lang], objid, lang, coreName);
+      }
+      
       
     }
+    if(didChange) this.DBChanged(coreName);
+  },
+  Remove: async function (coreName, onurid) {
+    DBH.RemoveObject(onurid, coreName);
+    this.DBChanged();
+  },
+  Filter: async function (cores, rules, send, count = -1, page) {
+    let whiteCores = [];
+    let blackCores = [];
     
-    return ctind;
-  }
-  //0 = normal, 1 = whitelist, 2 = blacklist, 3 = orlist
-  //{path: "root/Hastaliklar/Belirtiler", field: "Ates", status: 1}
-  //count -1 = all
-  this.Filter = async (rules, send, count = -1, page) => {
+    for(let c of cores) {
+      if(!(await DBH.GetCoreField(c, "inverted"))) whiteCores.push(c);
+      else blackCores.push(c); 
+    }
+    
     let white = [];
     let black = [];
     let orlist = {};
+    
+    let nfunc = async (path) => {
+      let wtmp = [];
+      let btmp = [];
+      for(let core of whiteCores) {
+        ArrayMerge(wtmp, await this.GetIndex(core, path));
+      }
+      for(let core of blackCores) {
+        ArrayMerge(btmp, await this.GetIndex(core, path));
+      }
+      WhiteBlackMerge(wtmp,btmp);
+      
+      return wtmp;
+    }
     
     for(let k = 0; k < rules.length; k++) {
       if(rules[k].status == 0) {
         continue;
       }
+      let path = rules[k].path+"/"+rules[k].field;
       if(rules[k].status == 1) {
-        await WhiteMerge(white, rules[k].path+"/"+rules[k].field, this.Index);
+        
+        let wtemp = await nfunc(path);
+        WhiteMerge(white, wtemp);
+        
       } else if(rules[k].status == 2) {
-        await BlackMerge(black, rules[k].path+"/"+rules[k].field, this.Index);
+        let btemp = await nfunc(path);
+        BlackMerge(black, btemp);
+        
       } else {
         NDEF(orlist, rules[k].path, []);
-        await BlackMerge(orlist[rules[k].path], rules[k].path+"/"+rules[k].field, this.Index);
+        let otemp = await nfunc(path);
+        BlackMerge(orlist[rules[k].path], otemp);
+        
       }
     }
+    
     for(let p in orlist) {
-      await WhiteMerge(white,orlist[p]);
+      WhiteMerge(white,orlist[p]);
     }
-    await WhiteBlackMerge(white,black);
+    WhiteBlackMerge(white,black);
     
     if(count != -1) {
       offset = page * count;
@@ -298,22 +344,58 @@ let Core = function (Name, Dil, Genelleme = {}, IdFields = ["CinsAdi", "TurAdi",
         return true;
       });
     }
+    white = await DBH.ObjidToOnurid(white, await DBH.GetCoreType(cores[0]));
     send(white, count, page);
-  }
-  //online icin {id,hash} gonder, client istediklerini yollar, normal obje gider
-  //bunu filter fonksiyonu kullanir sadece
-  //olumlu bos ise hepsi,
-  //send buraya object send fonksiyonu olarak gelir
-  //fonksiyonun kendisi hash gonderip alir
-  //list obje icerir
-  
-  
-  
-  
-  
-  
-  
+  },
+  Search: async function (cores, text, send, lang = "", count = -1, page) {
+    let whiteCores = [];
+    let blackCores = [];
+    
+    for(let c of cores) {
+      if(!(await DBH.GetCoreField(c, "inverted"))) whiteCores.push(c);
+      else blackCores.push(c);
+    }
+    //lang i bol sadece secili dillerde arama
+    
+    text = S2ENG(text.toLowerCase());
+    
+    let white = [];
+    
+    //blackCores ignored for now
+    for(let core of whiteCores) {
+      let tmpwhite = await DBH.SearchText(text, core, lang);
+      if(tmpwhite == null) {
+        continue;
+      }
+      ArrayMerge(white, tmpwhite);
+    }
+    if(white == null) {
+      send(white, count, page);
+      return null;
+    }
+    if(count != -1) {
+      offset = page * count;
+      white = white.filter((e,i,arr) => {
+        if(i < offset || i >= offset + count) return false;
+        return true;
+      });
+    }
+    white = await DBH.ObjidToOnurid(white, await DBH.GetCoreField(cores[0],"type"));
+    send(white, count, page);
+  },
+  GetLocalCopy: async function (coreName) {
+    let online = await DBH.GetCoreField(coreName, "online");
+    if(online != 2) {
+      return await DBH.GetBackUp(coreName);
+    }
+    return null;
+  },
+  //getcounter?
 }
+
+
+
+
 
 let cBurnetii = {
   AileAdi: "Coxiellaceae",
@@ -339,33 +421,31 @@ let cBurnetii = {
 };
 
 DBH.onConnected.push(async () => {
-  let core = new Core("Bakteriler#Global", Dil,Genelleme,["CinsAdi", "TurAdi", "SubTur"], 0);
-  await core.Filter([{path:"root/Gram",field: "Negative", status: 1},
-                {path:"root/Gram",field: "Positive", status: 2},
-              ],(x) => console.log(), false);
-  await core.Ekle(cBurnetii);
-  //await DBH.RemoveObject("Coxiella-burnetii", core.type, core.name);
-  /*await new Promise(res => setTimeout(x => {
-    
-    setTimeout(x => console.log("bitti"),1000);
-  },1000));*/
-  //DBH.RemoveFromIndex("596ccca4984ace5d480a1e22", "596bde0bf951ce3b3e95a935");
-  //DBH.RemoveIndexPath("root/AileAdi/Coxiellaceae", core.name);
+  
+  await DBH.CacheField("inverted");
+  await DBH.CacheField("type");
+  await DBH.CacheField("online");
+  await DBH.CacheField("global");
+  
+  //console.log(await DBH.GetCoreInfo("Bakteriler#Global"));
+  /*await Core.Filter(["Bakteriler#Global"],
+                              [{path:"root/Gram",field: "Negative", status: 1},{path:"root/Gram",field: "Positive", status: 2}],
+                              (x) => console.log(x));*/
+                              
+  
+                              
+  
+  //await core.Ekle(cBurnetii);
+  //await core.Search("Ateş", (x) => console.log(x));
+  //core.Remove("Coxiella-burnetii");
 });
 
 
-//console.log(core.GetId(cBurnetii));
-
-//core.Remove(core.GetId(cBurnetii));
-//console.log(core.Index);
-
-/*
-*/
 
 
 
 
-
+1
 
 
 
