@@ -396,6 +396,7 @@ DBH.User = {
   },
   new: async function (user) {
     //username ch limit
+    
   }
 }
 
