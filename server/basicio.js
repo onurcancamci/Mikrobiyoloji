@@ -42,18 +42,20 @@ wss.on('connection', function connection(ws) {
 
 let bio = {};
 
-bio.commandRecieve = function (message) {
+bio.commandRecieve = function (message, wsid) {
   console.log("hey, kimse dinlemio commandRecieve u", message);
 }
-bio.recieveClient = function (message, token) {
+bio.recieveClient = function (message, wsid) {
   if(message.isResponse) {
     Unlock(message._id, message);
   } else {
-    bio.commandRecieve(message);
+    bio.commandRecieve(message, wsid);
   }
 }
-bio.sendClient = function (message, token) {
-  Sockets[token].send(message);
+bio.sendClient = function (message, wsid) {
+  if(!message._id)
+    message._id = shortid.generate();
+  Sockets[wsid].send(message);
   return Lock(message._id);
 }
 

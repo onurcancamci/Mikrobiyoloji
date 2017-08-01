@@ -5,7 +5,7 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 const ObjectID = mongodb.ObjectID;
 const dburl = "mongodb://localhost:27017/tipdb";
-
+const md5 = require('js-md5');
 
 let DB;
 let Collections = {};
@@ -15,11 +15,10 @@ let dbConnect = async function(err, db) {
   console.log("Connected");
   DB = db;
   
-  ["bakteriler","indexPaths","cores","searchIndexes", "localCores", "users"].map(c => {
+  ["objects","indexPaths","cores","searchIndexes", "localCores", "users", "groups"].map(c => {
     db.createCollection(c);
     Collections[c] = db.collection(c);
   });
-  
   
   for(c of CommandQ) {
     await DBCommandParser(c);
@@ -39,6 +38,7 @@ let dbConnect = async function(err, db) {
   
 }
 let DBCommandParser = async function (comm) {
+  if(!Collections[comm.col]) return null;
   let ret = await Collections[comm.col][comm.comm](...comm.args);
   return ret;
 }
@@ -67,11 +67,14 @@ DBH.CreateCore = async function (name, globalStatus, online, type, title = "", d
   if(CommandQ.push({col:"cores", comm:"findOne", args:[{name:name}]})) {
     //CommandQ.push({col:"cores",comm:"updateOne",args:[{name:core.name},entry]});
   } else {
-    await CommandQ.push({col:"cores",comm:"insertOne",args:[entry]});
+    let id = (await CommandQ.push({col:"cores",comm:"insertOne",args:[entry]})).insertedId;
+    DBH.CoresChange();
+    return id;
   }
 }
 DBH.IncrementVersion = async function (coreName) {
   CommandQ.push({col: "cores", comm: "updateOne", args: [{name: coreName}, {$inc: {version: 1}}]});
+  DBH.CoresChange();
 }
 DBH.GetCoreField = async function (coreName, field) {
   if(DBH.FastDB.hasOwnProperty(field)) {
@@ -97,12 +100,22 @@ DBH.GetCoreFieldPairs = async function (field) {
 DBH.CacheField = async function (field) {
   let fp = await DBH.GetCoreFieldPairs(field);
   for(let p of fp) {
-    NDEF(DBH.FastDB, field, {});
+    //NDEF(DBH.FastDB, field, {});
+    DBH.FastDB[field] = {};
     DBH.FastDB[field][p.name] = p[field];
   }
 }
 DBH.GetCoreInfo = async function (coreName) {
   return await CommandQ.push({col: "cores", comm: "findOne", args: [{name: coreName}, {index: 0, searchIndex: 0, objs: 0}]});
+}
+DBH.GetCoreId = async function (coreName) {
+  return await DBH.GetCoreField(coreName, "_id");
+}
+DBH.CoresChange = async function () {
+  await DBH.CacheField("inverted");
+  await DBH.CacheField("type");
+  await DBH.CacheField("online");
+  await DBH.CacheField("global");
 }
 
 DBH.GetIndexPath = async function (pathfield, coreName) {
@@ -170,6 +183,12 @@ DBH.GetObject = async function (onurid, coreName) {
     id = id.objs[onurid];
     return await CommandQ.push({col:type, comm:"findOne", args: [{_id: ObjectID(id)}]});
   }
+}
+DBH.GetObjectObjid = async function (type, objid) {
+  return await CommandQ.push({col:type, comm:"findOne", args: [{_id: ObjectID(objid)}]});
+}
+DBH.GetObjectField = async function (type, objid, field) {
+  return (await CommandQ.push({col: type, comm: "findOne", args: [{_id: ObjectID(objid)}, {[`${field}`]: 1}]}))[field];
 }
 DBH.GetObjectId = async function (onurid, coreName) {
   let type = await DBH.GetCoreType(coreName);
@@ -385,27 +404,131 @@ DBH.BackUpCore = async function (coreName) {
 DBH.GetBackUp = async function (coreName) {
   return await CommandQ.push({col: "localCores", comm: "findOne", args: [{name: coreName}]});
 }
+DBH.GetBackUpVersion = async function (coreName) {
+  return (await CommandQ.push({col: "localCores", comm: "findOne", args: [{name: coreName}, {version: 1}]})).version;
+}
 
-DBH.user = {
-  get: async function (args) {
-    args = Arrayify(args);
+DBH.GetDebugBackup = async function () {
+  let son = "";
+  let colsarr = [];
+  for(coll in Collections) {
+    colsarr.push(await (await CommandQ.push({col: coll, comm:"find", args: [{}]})).toArray());
+  }
+  son = JSON.stringify(colsarr);
+  return son;
+}
+
+
+DBH.users = {
+  get: async function (...args) {
+    if(args[0]._id) args[0]._id = ObjectID(args[0]._id);
     return await CommandQ.push({col: "users", comm: "findOne", args: args});
   },
+  getField: async function (userid, field) {
+    return (await DBH.users.get({_id: ObjectID(userid)},{[`${field}`]:1}))[field];
+  },
+  getId: async function (username) {
+    return (await DBH.users.get({username:username},{_id:1}))._id;
+  },
   set: async function (user) {
-    CommandQ.push({col: "users", comm: "updateOne", args: [{username: user.username},user,{upsert: true}]});
+    user._hash = md5(user);
+    await CommandQ.push({col: "users", comm: "updateOne", args: [{username: user.username},user,{upsert: true}]});
   },
   new: async function (user) {
     user.username = user.username.substring(0,1000);
+    user._hash = md5(user);
     let usrid = (await CommandQ.push({col: "users", comm:"findOne", args: [{username: user.username},{_id: 1}]}));
     if(usrid == null) {
-      DBH.user.set(user);
-      return true;
+      return (await CommandQ.push({col: "users", comm:"insertOne", args:[user]})).insertedId; 
     } else {
-      return false;
+      return null;
     }
-  }
+  },
+  getCores: async function (userid) {
+    
+  },
+  cacheCores: async function (userid) {
+    
+  },
+  addCore: async function (userid, coreid) {
+    await DBH.users.cacheCores(userid);
+  },
 }
 
+
+
+DBH.groups = {
+  get: async function (...args) {
+    return await CommandQ.push({col: "groups", comm: "findOne", args: args});
+  },
+  getField: async function (groupName, field) {
+    return (await DBH.groups.get({name:groupName},{[`${field}`]:1}))[field];
+  },
+  getId: async function (groupName) {
+    return (await CommandQ.push({col: "groups", comm: "findOne", args: [{name: groupName}, {_id:1}]}))._id;
+  },
+  update: async function (name, ...fieldvals) {
+    let updateComm = {};
+    for(let fp of fieldvals) {
+      updateComm[fp.field] = fp.val;
+    }
+    CommandQ.push({col:"groups", comm:"updateOne", args: [{name, name}, {$set: updateComm}]});
+  },
+  new: async function (name, password, admins = [], info = {}) {
+    if(await CommandQ.push({col: "groups", comm: "findOne", args: [{name: name}]})) {
+      return false;
+    } else {
+      return (await CommandQ.push({col: "groups", comm: "insertOne", args:[{
+        name: name,
+        password: password,
+        users: admins,
+        admins: admins,
+        cores: [],
+        chat: [],
+        info: {}
+      }]})).insertedId;
+    }
+  },
+  remove: async function (groupName) {
+    let id = await DBH.groups.getId(groupName);
+    CommandQ.push({col:"users", comm: "updateMany", args: [{groups: id}, {$pull: {groups: id}}]});
+    CommandQ.push({col:"groups", comm:"deleteOne", args: [{name, name}]});
+  },
+  user: {
+    status: async function (groupName, userid) {
+      if(await CommandQ.push({col: "groups", comm:"findOne", args: [{users: userid},{_id:1}]})) {
+        if(await CommandQ.push({col: "groups", comm:"findOne", args: [{admins: userid},{_id:1}]})) {
+          return 2;
+        } else return 1;
+      } else return 0;
+    },
+    add: async function (groupName, userid) {
+      let id = await DBH.groups.getId(groupName);
+      await CommandQ.push({col:"users", comm: "updateOne", args: [{_id: ObjectID(userid), groups: {$ne: id}}, {$push: {groups: id}}]});
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, users: {$ne: userid}}, {$push: {[`users`]: userid}}]});
+    },
+    remove: async function (groupName, userid) {
+      await DBH.groups.user.deop(groupName,userid);
+      let id = await DBH.groups.getId(groupName);
+      await CommandQ.push({col:"users", comm: "updateOne", args: [{_id: ObjectID(userid), groups: {$eq: id}}, {$pull: {groups: id}}]});
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, users: {$eq: userid}}, {$pull: {[`users`]: userid}}]});
+    },
+    op: async function (groupName, userid) {
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, admins: {$ne: userid}}, {$push: {[`admins`]: userid}}]});
+    },
+    deop: async function (groupName, userid) {
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, admins: {$eq: userid}}, {$pull: {[`admins`]: userid}}]});
+    },
+  },
+  cores: {
+    add: async function (groupName, coreid) {
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, cores: {$ne: coreid}}, {$push: {[`cores`]: coreid}}]});
+    },
+    remove: async function (groupName, coreid) {
+      await CommandQ.push({col: "groups", comm: "updateOne", args: [{name: groupName, cores: {$eq: coreid}}, {$pull: {[`cores`]: coreid}}]});
+    },
+  },
+}
 
 
 
@@ -445,6 +568,12 @@ let Arrayify = function (O) {
   else return O;
 }
 
+DBH.onConnected.push(async () => {
+  DBH.CoresChange();
+  
+  CommandQ.push({col: "users", comm: "createIndex", args: [{tokens: 1}]});
+  CommandQ.push({col: "cores", comm: "createIndex", args: [{name: 1}]});
+});
 
 
 

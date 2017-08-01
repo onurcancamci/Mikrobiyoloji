@@ -3,7 +3,7 @@
 //bugs and fixes
 tum inputlara karakter limiti [][x]
 bize prefixli username
-
+user basi dakikada gelen data boyutu [][x]
 
 //ozellikler
 [][] = [server][client]

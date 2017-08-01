@@ -397,6 +397,11 @@ let Core = {
 
 
 
+
+
+
+
+
 let cBurnetii = {
   AileAdi: "Coxiellaceae",
   CinsAdi: "Coxiella",
@@ -422,10 +427,17 @@ let cBurnetii = {
 
 DBH.onConnected.push(async () => {
   
-  await DBH.CacheField("inverted");
-  await DBH.CacheField("type");
-  await DBH.CacheField("online");
-  await DBH.CacheField("global");
+  
+  
+  
+  
+  //DBH.groups.new("ITF", "asd", [await DBH.users.getId("onurcan")]);
+  
+  //console.log(await DBH.groups.user.status("ITF", await DBH.users.getId("onurcan")));
+  
+  
+  
+  
   
   //console.log(await DBH.GetCoreInfo("Bakteriler#Global"));
   /*await Core.Filter(["Bakteriler#Global"],
@@ -445,7 +457,7 @@ DBH.onConnected.push(async () => {
 
 
 
-1
+
 
 
 
