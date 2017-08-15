@@ -1,6 +1,6 @@
 
 
-Bakteriler.push({
+/*Bakteriler.push({
   AileAdi: "mesela", 
   CinsAdi: "Ains",
   TurAdi:  "beyza",
@@ -21,8 +21,8 @@ Bakteriler.push({
   Direnc : [],
   Duyarlilik: [],
   VirualanFaktorler: [],
-  Aciklama : [],*/
-});
+  Aciklama : [],*//*
+});*/
 
 
 

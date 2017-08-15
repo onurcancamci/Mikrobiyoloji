@@ -389,8 +389,8 @@ let cBurnetii = {
 
 DBH.onConnected.push(async () => {
   
-  cBurnetii._core = "596d19d4537b92101ec0dd8f";
-  cBurnetii._ID = "asdfg";
+  //cBurnetii._core = "596d19d4537b92101ec0dd8f";
+  //cBurnetii._ID = "asdfg";
 
   //console.log(await DBH.cores.getByOwners(["597f79ad687163d25f2b0410"]));
   //await DBHP("cores","updateOne", ID("596d19d4537b92101ec0dd8f"), {$set: {index: {}, searchIndex: []}});
